@@ -48,7 +48,7 @@ public class PlayerManager : MonoBehaviour
 
     public AudioClip audioClipFire;
     private AudioSource audioSource;
-    public AudioClip audioClipWeaponChanage;
+    public AudioClip audioClipWeaponChange;
     public GameObject RifleAKobj;
 
     void Start()
@@ -276,7 +276,8 @@ public class PlayerManager : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.Alpha1))
         {
-            audioSource.PlayOneShot(audioClipWeaponChanage);
+            audioSource.PlayOneShot(audioClipWeaponChange);
+            animator.SetTrigger("IsWeaponChange");
             RifleAKobj.SetActive(true);
         }
 
