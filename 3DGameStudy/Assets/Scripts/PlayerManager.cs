@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
-using UnityEngine; // NameSpace : 소속
+using UnityEngine;
+using UnityEngine.Android; // NameSpace : 소속
 
 public class PlayerManager : MonoBehaviour
 {
@@ -41,6 +43,11 @@ public class PlayerManager : MonoBehaviour
     private bool isRunnig = false;
     public float walkSpeed = 5.0f;
     public float runSpeed = 10.0f;
+    private bool isAim = false;
+    private bool isFire = false;
+
+    public AudioClip audioClipFire;
+    private AudioSource audioSource;
 
     void Start()
     {
@@ -51,6 +58,7 @@ public class PlayerManager : MonoBehaviour
         mainCamera = cameraTransform.GetComponent<Camera>();
         mainCamera.fieldOfView = defaultFov;
         animator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -95,7 +103,16 @@ public class PlayerManager : MonoBehaviour
 
         SetAnimator(); // 에니메이션 세팅
 
-        moveSpeed = isRunnig ? runSpeed : walkSpeed;
+        Debug.Log("MoveSpeed: " + moveSpeed);
+
+        if (isAim)
+        {
+            moveSpeed = 0;
+        }
+        else
+        {
+            moveSpeed = isRunnig ? runSpeed : walkSpeed;
+        }
     }
 
     void FirstPersonMovement()
@@ -185,6 +202,8 @@ public class PlayerManager : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(1)) // 1: 오른쪽 마우스 버튼 눌렀을때
         {
+            isAim = true;
+
             if (zoomCorutine != null) // zoomCorutine에 값이 있으면 (중복 차단을 위함)
             {
                 StopCoroutine(zoomCorutine); // zoomCorutine 값에 있는 코루틴을 종료한다.
@@ -208,6 +227,8 @@ public class PlayerManager : MonoBehaviour
 
         if (Input.GetMouseButtonUp(1))
         {
+            isAim = false;
+
             if (zoomCorutine != null)
             {
                 StopCoroutine(zoomCorutine);
@@ -237,8 +258,23 @@ public class PlayerManager : MonoBehaviour
             isRunnig = false;
         }
 
+        if (Input.GetMouseButtonDown(0))
+        {
+            if(isAim)
+            {
+                isFire = true;
+                audioSource.PlayOneShot(audioClipFire);
+            }
+        }
+        if (Input.GetMouseButtonUp(0))
+        {
+            isFire = false;
+        }
+
         animator.SetFloat("Horizontal", horizontal);
         animator.SetFloat("Vertical", vertical);
         animator.SetBool("IsRunnig", isRunnig);
+        animator.SetBool("IsAim", isAim);
+        animator.SetBool("IsFire", isFire);
     }
 }
