@@ -1,8 +1,9 @@
+using System.Collections;
 using UnityEngine; // NameSpace : 소속
 
 public class PlayerManager : MonoBehaviour
 {
-    public float moveSpeed = 5.0f; // 플레이어 이동 속도
+    private float moveSpeed = 5.0f; // 플레이어 이동 속도
     public float mouseSensitivity = 100.0f; // 마우스 감도
     public Transform cameraTransform; // 카메라의 Transform
     public CharacterController characterController;
@@ -34,6 +35,13 @@ public class PlayerManager : MonoBehaviour
     private Vector3 velocity;
     private bool isGround;
 
+    private Animator animator;
+    private float horizontal;
+    private float vertical;
+    private bool isRunnig = false;
+    public float walkSpeed = 5.0f;
+    public float runSpeed = 10.0f;
+
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -42,7 +50,7 @@ public class PlayerManager : MonoBehaviour
         targetFOV = defaultFov;
         mainCamera = cameraTransform.GetComponent<Camera>();
         mainCamera.fieldOfView = defaultFov;
-
+        animator = GetComponent<Animator>();
     }
 
     void Update()
@@ -76,12 +84,18 @@ public class PlayerManager : MonoBehaviour
 
         if(isFirstPerson)
         {
-            FirstPersonMovement();
+            FirstPersonMovement(); // 1인칭 카메라 세팅
         }
         else
         {
-            ThirdPersonMovement();
+            ThirdPersonMovement(); // 3인칭 카메라 세팅
         }
+
+        SettingZoom(); // 줌 상태 변경 함수
+
+        SetAnimator(); // 에니메이션 세팅
+
+        moveSpeed = isRunnig ? runSpeed : walkSpeed;
     }
 
     void FirstPersonMovement()
@@ -102,8 +116,8 @@ public class PlayerManager : MonoBehaviour
 
     void ThirdPersonMovement()
     {
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
+        horizontal = Input.GetAxis("Horizontal");
+        vertical = Input.GetAxis("Vertical");
 
         Vector3 move = transform.right * horizontal + transform.forward * vertical;
         characterController.Move(move * moveSpeed * Time.deltaTime);
@@ -133,5 +147,98 @@ public class PlayerManager : MonoBehaviour
             cameraTransform.position = playerLookObj.position + thirdPersonOffset + Quaternion.Euler(pitch, yaw, 0) * direction;
             cameraTransform.LookAt(playerLookObj.position + new Vector3(0, thirdPersonOffset.y, 0));
         }
+    }
+
+    public void SetTargetDistance(float distance)
+    {
+        targetDistance  = distance;
+    }
+
+    public void SetTargetFov(float fov)
+    {
+        targetFOV = fov;
+    }
+
+    IEnumerator ZoomCamera(float targetDistance)
+    {
+        while(Mathf.Abs(currentDistance - targetDistance) > 0.01f) // 현재 거리에서 목표 거리로 부드럽게 이동
+        {
+            currentDistance = Mathf.Lerp(currentDistance, targetDistance, Time.deltaTime * zoomSpeed);
+            yield return null;
+        }
+
+        currentDistance = targetDistance; // 목표거리에 도달한 후 값을 고정
+    }
+
+    IEnumerator ZoomFieldOfView(float tatgetFov)
+    {
+        while(Mathf.Abs(mainCamera.fieldOfView - targetFOV) > 0.01f)
+        {
+            mainCamera.fieldOfView = Mathf.Lerp(mainCamera.fieldOfView, tatgetFov, Time.deltaTime * zoomSpeed);
+            yield return null;
+        }
+
+        mainCamera.fieldOfView = tatgetFov;
+    }
+
+    void SettingZoom()
+    {
+        if (Input.GetMouseButtonDown(1)) // 1: 오른쪽 마우스 버튼 눌렀을때
+        {
+            if (zoomCorutine != null) // zoomCorutine에 값이 있으면 (중복 차단을 위함)
+            {
+                StopCoroutine(zoomCorutine); // zoomCorutine 값에 있는 코루틴을 종료한다.
+            }
+
+            if (isFirstPerson) // 1인칭일 경우
+            {
+                SetTargetFov(zoomFov); // targetFOV(목표 Fov)에 zoomFov(확대 시 카메라 시야각)값을 대입
+
+                // targetFOV(목표 Fov)을 ZoomFieldOfView코루틴 함수에 매개변수로 넣어서 
+                // StartCoroutine로 실행
+                // 실행한 값을 zoomCorutine에 대입(코루틴 활성화 여부확인)
+                zoomCorutine = StartCoroutine(ZoomFieldOfView(targetFOV));
+            }
+            else
+            {
+                SetTargetDistance(zoomDistance);
+                zoomCorutine = StartCoroutine(ZoomCamera(targetDistance));
+            }
+        }
+
+        if (Input.GetMouseButtonUp(1))
+        {
+            if (zoomCorutine != null)
+            {
+                StopCoroutine(zoomCorutine);
+            }
+
+            if (isFirstPerson) // 1인칭일 경우
+            {
+                SetTargetFov(defaultFov);
+                zoomCorutine = StartCoroutine(ZoomFieldOfView(targetFOV));
+            }
+            else
+            {
+                SetTargetDistance(thirdPersonDistance);
+                zoomCorutine = StartCoroutine(ZoomCamera(targetDistance));
+            }
+        }
+    }
+
+    void SetAnimator()
+    {
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            isRunnig = true;
+        }
+        else
+        {
+            isRunnig = false;
+        }
+
+        animator.SetFloat("Horizontal", horizontal);
+        animator.SetFloat("Vertical", vertical);
+        animator.SetBool("IsRunnig", isRunnig);
     }
 }

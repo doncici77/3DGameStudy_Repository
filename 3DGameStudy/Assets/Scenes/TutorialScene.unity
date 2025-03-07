@@ -3025,7 +3025,7 @@ Animator:
   m_GameObject: {fileID: 8044969989302353294}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 0e55d5c42cc96404f872b45455603f8b, type: 3}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 1c97d8e2441f50d43a0675ed4543ef79, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
@@ -4866,9 +4866,9 @@ MonoBehaviour:
   thirdPersonDistance: 3
   thirdPersonOffset: {x: 0, y: 1.5, z: 0}
   playerLookObj: {fileID: 1025767622}
-  zoomDistance: 1
+  zoomDistance: 1.5
   zoomSpeed: 5
-  defaultFov: 60
+  defaultFov: 40
   zoomFov: 30
   gravity: -9.81
   jumpHeight: 2
@@ -4894,7 +4894,7 @@ CharacterController:
   m_Radius: 0.25
   m_SlopeLimit: 45
   m_StepOffset: 0.3
-  m_SkinWidth: 0.08
+  m_SkinWidth: 0.0001
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &8064838106943505735
