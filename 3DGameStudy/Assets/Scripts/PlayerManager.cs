@@ -48,6 +48,8 @@ public class PlayerManager : MonoBehaviour
 
     public AudioClip audioClipFire;
     private AudioSource audioSource;
+    public AudioClip audioClipWeaponChanage;
+    public GameObject RifleAKobj;
 
     void Start()
     {
@@ -59,6 +61,7 @@ public class PlayerManager : MonoBehaviour
         mainCamera.fieldOfView = defaultFov;
         animator = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
+        RifleAKobj.SetActive(false);
     }
 
     void Update()
@@ -269,6 +272,12 @@ public class PlayerManager : MonoBehaviour
         if (Input.GetMouseButtonUp(0))
         {
             isFire = false;
+        }
+
+        if(Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            audioSource.PlayOneShot(audioClipWeaponChanage);
+            RifleAKobj.SetActive(true);
         }
 
         animator.SetFloat("Horizontal", horizontal);
