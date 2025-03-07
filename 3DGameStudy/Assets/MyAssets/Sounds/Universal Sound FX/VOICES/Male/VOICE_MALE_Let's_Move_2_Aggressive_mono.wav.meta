@@ -1,0 +1,25 @@
+fileFormatVersion: 2
+guid: e5042fdf4879d9a4e8562a8d9fca1e87
+labels:
+- usfx
+- imphenzia
+- voice
+- male
+- mono
+AudioImporter:
+  serializedVersion: 6
+  defaultSettings:
+    loadType: 1
+    sampleRateSetting: 0
+    sampleRateOverride: 0
+    compressionFormat: 0
+    quality: 0
+    conversionMode: 0
+  platformSettingOverrides: {}
+  forceToMono: 0
+  preloadAudioData: 1
+  loadInBackground: 0
+  3D: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

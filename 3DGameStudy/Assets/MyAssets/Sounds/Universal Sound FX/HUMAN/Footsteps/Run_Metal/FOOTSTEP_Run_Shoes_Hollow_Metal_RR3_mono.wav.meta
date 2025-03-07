@@ -1,0 +1,32 @@
+fileFormatVersion: 2
+guid: 2b5b2d7438a37824c8bd05bb0a4c6124
+labels:
+- usfx
+- imphenzia
+- foley
+- footstep
+- shoes
+- shoe
+- footsteps
+- walk
+- run
+- ground
+- mono
+- metal
+AudioImporter:
+  serializedVersion: 6
+  defaultSettings:
+    loadType: 1
+    sampleRateSetting: 0
+    sampleRateOverride: 0
+    compressionFormat: 0
+    quality: 0
+    conversionMode: 0
+  platformSettingOverrides: {}
+  forceToMono: 0
+  preloadAudioData: 1
+  loadInBackground: 0
+  3D: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
