@@ -102,14 +102,7 @@ public class PlayerManager : MonoBehaviour
 
     void SetMove()
     {
-        if (isAim)
-        {
-            moveSpeed = 0;
-        }
-        else
-        {
-            moveSpeed = isRunnig ? runSpeed : walkSpeed;
-        }
+        moveSpeed = isRunnig ? runSpeed : walkSpeed;
     }
 
     void SetPersonShooter()
@@ -165,7 +158,7 @@ public class PlayerManager : MonoBehaviour
 
     void UpdateCameraPosition()
     {
-        if(isRotaterAroundPlayer)
+        if (isRotaterAroundPlayer)
         {
             // 카메라가 플레이어 오른쪽에서 회전하도록 설정
             Vector3 direction = new Vector3(0, 0, -currentDistance);
@@ -189,7 +182,7 @@ public class PlayerManager : MonoBehaviour
 
     public void SetTargetDistance(float distance)
     {
-        targetDistance  = distance;
+        targetDistance = distance;
     }
 
     public void SetTargetFov(float fov)
@@ -199,7 +192,7 @@ public class PlayerManager : MonoBehaviour
 
     IEnumerator ZoomCamera(float targetDistance)
     {
-        while(Mathf.Abs(currentDistance - targetDistance) > 0.01f) // 현재 거리에서 목표 거리로 부드럽게 이동
+        while (Mathf.Abs(currentDistance - targetDistance) > 0.01f) // 현재 거리에서 목표 거리로 부드럽게 이동
         {
             currentDistance = Mathf.Lerp(currentDistance, targetDistance, Time.deltaTime * zoomSpeed);
             yield return null;
@@ -210,7 +203,7 @@ public class PlayerManager : MonoBehaviour
 
     IEnumerator ZoomFieldOfView(float tatgetFov)
     {
-        while(Mathf.Abs(mainCamera.fieldOfView - targetFOV) > 0.01f)
+        while (Mathf.Abs(mainCamera.fieldOfView - targetFOV) > 0.01f)
         {
             mainCamera.fieldOfView = Mathf.Lerp(mainCamera.fieldOfView, tatgetFov, Time.deltaTime * zoomSpeed);
             yield return null;
@@ -224,6 +217,8 @@ public class PlayerManager : MonoBehaviour
         if (Input.GetMouseButtonDown(1)) // 1: 오른쪽 마우스 버튼 눌렀을때
         {
             isAim = true;
+
+            animator.SetLayerWeight(1, 1);
 
             if (zoomCorutine != null) // zoomCorutine에 값이 있으면 (중복 차단을 위함)
             {
@@ -249,6 +244,8 @@ public class PlayerManager : MonoBehaviour
         if (Input.GetMouseButtonUp(1))
         {
             isAim = false;
+
+            animator.SetLayerWeight(1, 0);
 
             if (zoomCorutine != null)
             {
@@ -281,20 +278,19 @@ public class PlayerManager : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            if(isAim)
+            if (isAim)
             {
+                animator.SetTrigger("Fire");
                 isFire = true;
-                audioSource.PlayOneShot(audioClipFire);
             }
         }
-        if (Input.GetMouseButtonUp(0))
+        if(Input.GetMouseButtonUp(0))
         {
             isFire = false;
         }
 
-        if(Input.GetKeyDown(KeyCode.Alpha1))
+        if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            audioSource.PlayOneShot(audioClipWeaponChange);
             animator.SetTrigger("IsWeaponChange");
             RifleAKobj.SetActive(true);
         }
@@ -302,7 +298,15 @@ public class PlayerManager : MonoBehaviour
         animator.SetFloat("Horizontal", horizontal);
         animator.SetFloat("Vertical", vertical);
         animator.SetBool("IsRunnig", isRunnig);
-        animator.SetBool("IsAim", isAim);
-        animator.SetBool("IsFire", isFire);
+    }
+
+    public void WeaponChangeSoundOn()
+    {
+        audioSource.PlayOneShot(audioClipWeaponChange);
+    }
+
+    public void FireSoundOn()
+    {
+        audioSource.PlayOneShot(audioClipFire);
     }
 }
