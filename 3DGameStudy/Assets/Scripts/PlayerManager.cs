@@ -53,6 +53,8 @@ public class PlayerManager : MonoBehaviour
     private int animationSpeed = 1;
     string currentAnimation;
 
+    private bool canMove = true;
+
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -82,22 +84,33 @@ public class PlayerManager : MonoBehaviour
 
         SetPickUp(); // 픽업 행동 세팅
 
+        SetAnimationSpeed(); // 애니메이션 스피드 조절
+    }
+
+    private void SetAnimationSpeed()
+    {
         animator.speed = animationSpeed;
 
         AnimatorStateInfo stateInfo0 = animator.GetCurrentAnimatorStateInfo(0);
         AnimatorStateInfo stateInfo1 = animator.GetCurrentAnimatorStateInfo(1);
 
-        if ((stateInfo0.IsName("PickUp") || stateInfo0.IsName("Hit")) && stateInfo0.normalizedTime <= 1.0f)
+        if ((stateInfo0.IsName("PickUp") || stateInfo0.IsName("Hit")) && stateInfo0.normalizedTime < 1.0f)
         {
             animationSpeed = 2;
-        }
-        else if(stateInfo1.IsName("Hit") && stateInfo1.normalizedTime <= 1.0f)
-        {
 
+            if(stateInfo0.IsName("PickUp"))
+            {
+                canMove = false;
+            }
+        }
+        else if (stateInfo1.IsName("Hit") && stateInfo1.normalizedTime < 1.0f)
+        {
+            animationSpeed = 2;
         }
         else
         {
             animationSpeed = 1;
+            canMove = true;
         }
     }
 
@@ -132,7 +145,14 @@ public class PlayerManager : MonoBehaviour
 
     void SetMove()
     {
-        moveSpeed = isRunnig ? runSpeed : walkSpeed;
+        if (!canMove)
+        {
+            moveSpeed = 0.0f;
+        }
+        else
+        {
+            moveSpeed = isRunnig ? runSpeed : walkSpeed;
+        }
     }
 
     void SetPersonShooter()
