@@ -55,6 +55,10 @@ public class PlayerManager : MonoBehaviour
 
     private bool canMove = true;
 
+    public Transform aimTarget;
+
+    private float weaponMaxDistance;
+
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -85,6 +89,12 @@ public class PlayerManager : MonoBehaviour
         SetPickUp(); // 픽업 행동 세팅
 
         SetAnimationSpeed(); // 애니메이션 스피드 조절
+    }
+
+    void UpdateAimTarget()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        aimTarget.position = ray.GetPoint(10.0f);
     }
 
     private void SetAnimationSpeed()
@@ -155,6 +165,9 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 인칭 변경 함수
+    /// </summary>
     void SetPersonShooter()
     {
         if (Input.GetKeyDown(KeyCode.V))
@@ -179,6 +192,9 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 1인칭 카메라 움직임
+    /// </summary>
     void FirstPersonMovement()
     {
         float horizontal = Input.GetAxis("Horizontal");
@@ -195,6 +211,9 @@ public class PlayerManager : MonoBehaviour
         transform.rotation = Quaternion.Euler(0, cameraTransform.eulerAngles.y, 0);
     }
 
+    /// <summary>
+    /// 3인칭 움직임
+    /// </summary>
     void ThirdPersonMovement()
     {
         horizontal = Input.GetAxis("Horizontal");
@@ -206,6 +225,9 @@ public class PlayerManager : MonoBehaviour
         UpdateCameraPosition();
     }
 
+    /// <summary>
+    /// 3인칭 카메라 회전
+    /// </summary>
     void UpdateCameraPosition()
     {
         if (isRotaterAroundPlayer)
@@ -228,6 +250,8 @@ public class PlayerManager : MonoBehaviour
             cameraTransform.position = playerLookObj.position + thirdPersonOffset + Quaternion.Euler(pitch, yaw, 0) * direction;
             cameraTransform.LookAt(playerLookObj.position + new Vector3(0, thirdPersonOffset.y, 0));
         }
+
+        UpdateAimTarget(); // 에임조정
     }
 
     public void SetTargetDistance(float distance)
@@ -330,8 +354,24 @@ public class PlayerManager : MonoBehaviour
         {
             if (isAim)
             {
+                //Weapon Type MaxDistance Set
+                weaponMaxDistance = 1000.0f;
+
                 animator.SetTrigger("Fire");
                 isFire = true;
+
+                Ray ray = new Ray(mainCamera.transform.position, mainCamera.transform.forward);
+                RaycastHit hit;
+
+                if (Physics.Raycast(ray, out hit, weaponMaxDistance))
+                {
+                    Debug.Log("Hit : " + hit.collider.gameObject.name);
+                    Debug.DrawRay(ray.origin, hit.point, Color.red, 2.0f);
+                }
+                else
+                {
+                    Debug.DrawRay(ray.origin, ray.origin + ray.direction * weaponMaxDistance, Color.green, 2.0f);
+                }
             }
         }
         if(Input.GetMouseButtonUp(0))
