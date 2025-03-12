@@ -309,4 +309,29 @@ public class PlayerManager : MonoBehaviour
     {
         audioSource.PlayOneShot(audioClipFire);
     }
+
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Zombie")
+        {
+            FireSoundOn();
+            animator.SetTrigger("Damage");
+            characterController.enabled = false;
+            transform.position = new Vector3(0, 0, 0);
+            characterController.enabled = true;
+        }
+    }
+
+    /*private void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log(collision.gameObject.name);
+
+        if (collision.gameObject.tag == "Zombie")
+        {
+            FireSoundOn();
+            animator.SetTrigger("Damage");
+            gameObject.transform.position = new Vector3(0, 0, 0);
+        }
+    }*/
 }
