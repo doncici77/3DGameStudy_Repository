@@ -50,6 +50,8 @@ public class PlayerManager : MonoBehaviour
     private AudioSource audioSource;
     public AudioClip audioClipWeaponChange;
     public GameObject RifleAKobj;
+    private int animationSpeed = 1;
+    string currentAnimation;
 
     void Start()
     {
@@ -77,6 +79,34 @@ public class PlayerManager : MonoBehaviour
         SetAnimator(); // 에니메이션 세팅
 
         SetMove(); // 움직임 상태 세팅
+
+        SetPickUp(); // 픽업 행동 세팅
+
+        animator.speed = animationSpeed;
+
+        AnimatorStateInfo stateInfo0 = animator.GetCurrentAnimatorStateInfo(0);
+        AnimatorStateInfo stateInfo1 = animator.GetCurrentAnimatorStateInfo(1);
+
+        if ((stateInfo0.IsName("PickUp") || stateInfo0.IsName("Hit")) && stateInfo0.normalizedTime <= 1.0f)
+        {
+            animationSpeed = 2;
+        }
+        else if(stateInfo1.IsName("Hit") && stateInfo1.normalizedTime <= 1.0f)
+        {
+
+        }
+        else
+        {
+            animationSpeed = 1;
+        }
+    }
+
+    private void SetPickUp()
+    {
+        if(Input.GetKeyDown(KeyCode.E))
+        {
+            animator.SetTrigger("PickUp");
+        }
     }
 
     void SetMouseScope()
@@ -318,20 +348,8 @@ public class PlayerManager : MonoBehaviour
             FireSoundOn();
             animator.SetTrigger("Damage");
             characterController.enabled = false;
-            transform.position = new Vector3(0, 0, 0);
+            transform.position = Vector3.zero;
             characterController.enabled = true;
         }
     }
-
-    /*private void OnCollisionEnter(Collision collision)
-    {
-        Debug.Log(collision.gameObject.name);
-
-        if (collision.gameObject.tag == "Zombie")
-        {
-            FireSoundOn();
-            animator.SetTrigger("Damage");
-            gameObject.transform.position = new Vector3(0, 0, 0);
-        }
-    }*/
 }
