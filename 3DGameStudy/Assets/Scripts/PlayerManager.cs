@@ -66,6 +66,21 @@ public class PlayerManager : MonoBehaviour
 
     void Update()
     {
+        SetMouseScope(); // 마우스 움직임 및 범위 처리
+
+        CheckGround(); // 그라운드 체크?
+
+        SetPersonShooter(); // 1인칭 or 3인칭 관리
+
+        SettingZoom(); // 줌 상태 변경 함수
+
+        SetAnimator(); // 에니메이션 세팅
+
+        SetMove(); // 움직임 상태 세팅
+    }
+
+    void SetMouseScope()
+    {
         // 마우스 입력을 받아 카메라와 플레이어 회전 처리
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
@@ -73,41 +88,20 @@ public class PlayerManager : MonoBehaviour
         yaw += mouseX;
         pitch -= mouseY;
         pitch = Mathf.Clamp(pitch, -45, 45);
+    }
 
+    void CheckGround()
+    {
         isGround = characterController.isGrounded;
 
-        if(isGround && velocity.y < 0)
+        if (isGround && velocity.y < 0)
         {
             velocity.y = -2f;
         }
+    }
 
-        if(Input.GetKeyDown(KeyCode.V))
-        {
-            isFirstPerson = !isFirstPerson;
-            Debug.Log(isRotaterAroundPlayer ? "1인칭 모드" : "3인칭 모드");
-        }
-
-        if(Input.GetKeyDown(KeyCode.F))
-        {
-            isRotaterAroundPlayer = !isRotaterAroundPlayer;
-            Debug.Log(isRotaterAroundPlayer ? "카메라가 주위를 회전합니다." : "플레이어가 시야에 따라서 회전합니다");
-        }
-
-        if(isFirstPerson)
-        {
-            FirstPersonMovement(); // 1인칭 카메라 세팅
-        }
-        else
-        {
-            ThirdPersonMovement(); // 3인칭 카메라 세팅
-        }
-
-        SettingZoom(); // 줌 상태 변경 함수
-
-        SetAnimator(); // 에니메이션 세팅
-
-        Debug.Log("MoveSpeed: " + moveSpeed);
-
+    void SetMove()
+    {
         if (isAim)
         {
             moveSpeed = 0;
@@ -115,6 +109,30 @@ public class PlayerManager : MonoBehaviour
         else
         {
             moveSpeed = isRunnig ? runSpeed : walkSpeed;
+        }
+    }
+
+    void SetPersonShooter()
+    {
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            isFirstPerson = !isFirstPerson;
+            Debug.Log(isRotaterAroundPlayer ? "1인칭 모드" : "3인칭 모드");
+        }
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            isRotaterAroundPlayer = !isRotaterAroundPlayer;
+            Debug.Log(isRotaterAroundPlayer ? "카메라가 주위를 회전합니다." : "플레이어가 시야에 따라서 회전합니다");
+        }
+
+        if (isFirstPerson)
+        {
+            FirstPersonMovement(); // 1인칭 카메라 세팅
+        }
+        else
+        {
+            ThirdPersonMovement(); // 3인칭 카메라 세팅
         }
     }
 
