@@ -79,7 +79,7 @@ public class PlayerManager : MonoBehaviour
     public int haveBullet = 30;
 
     public ParticleSystem rifleEffect;
-
+    private float fireDelay = 0.5f;
 
     void Start()
     {
@@ -435,14 +435,16 @@ public class PlayerManager : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            if (isAim && haveBullet > 0)
+            if (isAim && haveBullet > 0 && !isFire)
             {
                 //Weapon Type MaxDistance Set
                 weaponMaxDistance = 1000.0f;
 
                 animator.SetTrigger("Fire");
-                haveBullet--;
                 isFire = true;
+                StartCoroutine(DelayFire());
+
+                haveBullet--; // 테스트용 코드
 
                 Ray ray = new Ray(mainCamera.transform.position, mainCamera.transform.forward);
                 RaycastHit[] hits = Physics.RaycastAll(ray, weaponMaxDistance, targetLayerMask);
@@ -476,14 +478,20 @@ public class PlayerManager : MonoBehaviour
 
             Debug.Log("남은 총알 : " + haveBullet);
         }
-        if (Input.GetMouseButtonUp(0))
+        /*if (Input.GetMouseButtonUp(0))
         {
             isFire = false;
-        }
+        }*/
 
         animator.SetFloat("Horizontal", horizontal);
         animator.SetFloat("Vertical", vertical);
         animator.SetBool("IsRunnig", isRunnig);
+    }
+
+    IEnumerator DelayFire()
+    {
+        yield return new WaitForSeconds(fireDelay);
+        isFire = false;
     }
 
     public void WeaponChangeSoundOn()
@@ -497,6 +505,21 @@ public class PlayerManager : MonoBehaviour
         rifleEffect.Play();
     }
 
+    /*// 걷는 사운드 예시
+    public void FootStepSoundOn()
+    {
+        if (Physics.Raycast(transform.position, transform.forward, out hit, 10.0f, itemLayer))
+        {
+            if (hit.ColliderHit.tag == "Wood")
+            {
+                audioSource.PlayOneShot(audioClipFire); //발소리재생
+            }
+            else if (hit.ColliderHit.tag == "Wood")
+            {
+                audioSource.PlayOneShot(audioClipFire); //발소리재생
+            }
+        }
+    }*/
 
     private void OnTriggerEnter(Collider other)
     {
