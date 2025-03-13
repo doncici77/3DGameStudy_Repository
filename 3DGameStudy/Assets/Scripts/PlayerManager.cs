@@ -167,7 +167,6 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-
     void PlayPickUp()
     {
         Vector3 origin = itemGetPos.position;
