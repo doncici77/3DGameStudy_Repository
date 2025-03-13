@@ -50,6 +50,7 @@ public class PlayerManager : MonoBehaviour
     public AudioClip audioClipFire;
     private AudioSource audioSource;
     public AudioClip audioClipWeaponChange;
+    public AudioClip audioClipPickUp;
     public GameObject RifleAKobj;
     private int animationSpeed = 1;
     string currentAnimation;
@@ -152,6 +153,7 @@ public class PlayerManager : MonoBehaviour
         {
             hit.collider.gameObject.SetActive(false);
             Debug.Log("Item : " + hit.collider.name);
+            audioSource.PlayOneShot(audioClipPickUp);
         }
     }
 
