@@ -499,7 +499,7 @@ public class PlayerManager : MonoBehaviour
         audioSource.PlayOneShot(audioClipWeaponChange);
     }
 
-    public void FireSoundOn()
+    public void FireSoundOn()   
     {
         audioSource.PlayOneShot(audioClipFire);
         rifleEffect.Play();
