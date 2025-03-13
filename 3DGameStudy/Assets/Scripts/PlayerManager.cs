@@ -367,6 +367,12 @@ public class PlayerManager : MonoBehaviour
                 {
                     Debug.Log("Hit : " + hit.collider.gameObject.name);
                     Debug.DrawRay(ray.origin, hit.point, Color.red, 2.0f);
+
+                    if(hit.collider.gameObject.tag == "Zombie")
+                    {
+                        hit.collider.gameObject.GetComponent<ZombieManager>().hp -= 10;
+                        Debug.Log("Á»ºñ hp: : " + hit.collider.gameObject.GetComponent<ZombieManager>().hp);
+                    }
                 }
                 else
                 {

@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class ZombieManager : MonoBehaviour
 {
+    public int hp = 50;
+
     void Start()
     {
         
@@ -9,7 +11,10 @@ public class ZombieManager : MonoBehaviour
 
     void Update()
     {
-        
+        if(hp <= 0)
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
