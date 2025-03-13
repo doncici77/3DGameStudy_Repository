@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Android;
 using UnityEngine.Animations.Rigging; // NameSpace : 소속
@@ -69,6 +70,13 @@ public class PlayerManager : MonoBehaviour
     public LayerMask itemLayer;
     public Transform itemGetPos;
 
+    public GameObject crosshairObj;
+    public GameObject itemIcon;
+
+    private bool hasItemRifle = false;
+    private bool canAim = false;
+
+
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -80,6 +88,8 @@ public class PlayerManager : MonoBehaviour
         animator = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
         RifleAKobj.SetActive(false);
+        crosshairObj.SetActive(false);
+        itemIcon.SetActive(false);
     }
 
     void Update()
@@ -90,7 +100,15 @@ public class PlayerManager : MonoBehaviour
 
         SetPersonShooter(); // 1인칭 or 3인칭 관리
 
-        SettingZoom(); // 줌 상태 변경 함수
+        if(hasItemRifle)
+        {
+            if(canAim)
+            {
+                SettingZoom(); // 줌 상태 변경 함수
+            }
+
+            SetRifle(); // 총 꺼내는 애니메이션 함수
+        }
 
         SetAnimator(); // 에니메이션 세팅
 
@@ -118,7 +136,7 @@ public class PlayerManager : MonoBehaviour
         {
             animationSpeed = 2;
 
-            if(stateInfo0.IsName("PickUp"))
+            if (stateInfo0.IsName("PickUp"))
             {
                 canMove = false;
             }
@@ -136,7 +154,7 @@ public class PlayerManager : MonoBehaviour
 
     private void SetPickUp()
     {
-        if(Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E))
         {
             animator.SetTrigger("PickUp");
         }
@@ -154,6 +172,12 @@ public class PlayerManager : MonoBehaviour
             hit.collider.gameObject.SetActive(false);
             Debug.Log("Item : " + hit.collider.name);
             audioSource.PlayOneShot(audioClipPickUp);
+
+            if (hit.collider.name == "Rifle")
+            {
+                hasItemRifle = true;
+                itemIcon.SetActive(true);
+            }
         }
     }
 
@@ -313,12 +337,15 @@ public class PlayerManager : MonoBehaviour
 
     void SettingZoom()
     {
+
         if (Input.GetMouseButtonDown(1)) // 1: 오른쪽 마우스 버튼 눌렀을때
         {
             isAim = true;
 
+            crosshairObj.SetActive(true);
+
             // 캐릭터 회전
-            multiAimConstraint.data.offset = new Vector3 (-35.0f, 0f, 0f);
+            multiAimConstraint.data.offset = new Vector3(-35.0f, 0f, 0f);
 
             animator.SetLayerWeight(1, 1);
 
@@ -347,6 +374,8 @@ public class PlayerManager : MonoBehaviour
         {
             isAim = false;
 
+            crosshairObj.SetActive(false);
+
             multiAimConstraint.data.offset = new Vector3(0f, 0f, 0f);
 
             animator.SetLayerWeight(1, 0);
@@ -366,6 +395,19 @@ public class PlayerManager : MonoBehaviour
                 SetTargetDistance(thirdPersonDistance);
                 zoomCorutine = StartCoroutine(ZoomCamera(targetDistance));
             }
+        }
+    }
+
+    /// <summary>
+    /// 총꺼내는 애니메이션 함수
+    /// </summary>
+    void SetRifle()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            animator.SetTrigger("IsWeaponChange");
+            RifleAKobj.SetActive(true);
+            canAim = true;
         }
     }
 
@@ -396,10 +438,10 @@ public class PlayerManager : MonoBehaviour
                 Ray ray = new Ray(mainCamera.transform.position, mainCamera.transform.forward);
                 RaycastHit[] hits = Physics.RaycastAll(ray, weaponMaxDistance, targetLayerMask);
 
-                if(hits.Length > 0)
+                if (hits.Length > 0)
                 {
                     int hitCount = 0;
-                    foreach(RaycastHit hit in hits)
+                    foreach (RaycastHit hit in hits)
                     {
                         //if (hitCount == 0 || hitCount == hits.Length)
                         {
@@ -408,6 +450,14 @@ public class PlayerManager : MonoBehaviour
                         }
                         hitCount++;
                     }
+
+                    // 거리를 기준으로 정렬
+                    hits = hits.OrderBy(hit => hit.distance).ToArray();
+
+                    foreach (RaycastHit hit in hits)
+                    {
+                        Debug.Log(hit.collider.gameObject.name + " - 거리: " + hit.distance);
+                    }
                 }
                 else
                 {
@@ -415,15 +465,9 @@ public class PlayerManager : MonoBehaviour
                 }
             }
         }
-        if(Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(0))
         {
             isFire = false;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            animator.SetTrigger("IsWeaponChange");
-            RifleAKobj.SetActive(true);
         }
 
         animator.SetFloat("Horizontal", horizontal);
