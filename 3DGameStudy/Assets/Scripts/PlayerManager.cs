@@ -1,7 +1,8 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Android; // NameSpace : 소속
+using UnityEngine.Android;
+using UnityEngine.Animations.Rigging; // NameSpace : 소속
 
 public class PlayerManager : MonoBehaviour
 {
@@ -57,7 +58,15 @@ public class PlayerManager : MonoBehaviour
 
     public Transform aimTarget;
 
-    private float weaponMaxDistance;
+    private float weaponMaxDistance = 100.0f;
+    public LayerMask targetLayerMask;
+
+    public MultiAimConstraint multiAimConstraint;
+
+    public Vector3 boxSize = Vector3.one;
+    public float castDistance = 5.0f;
+    public LayerMask itemLayer;
+    public Transform itemGetPos;
 
     void Start()
     {
@@ -129,6 +138,20 @@ public class PlayerManager : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.E))
         {
             animator.SetTrigger("PickUp");
+        }
+    }
+
+    void PlayPickUp()
+    {
+        Vector3 origin = itemGetPos.position;
+        Vector3 direction = itemGetPos.forward;
+        RaycastHit[] hits;
+        hits = Physics.BoxCastAll(origin, boxSize / 2, direction, Quaternion.identity, castDistance, itemLayer);
+
+        foreach (RaycastHit hit in hits)
+        {
+            hit.collider.gameObject.SetActive(false);
+            Debug.Log("Item : " + hit.collider.name);
         }
     }
 
@@ -292,6 +315,9 @@ public class PlayerManager : MonoBehaviour
         {
             isAim = true;
 
+            // 캐릭터 회전
+            multiAimConstraint.data.offset = new Vector3 (-35.0f, 0f, 0f);
+
             animator.SetLayerWeight(1, 1);
 
             if (zoomCorutine != null) // zoomCorutine에 값이 있으면 (중복 차단을 위함)
@@ -319,6 +345,8 @@ public class PlayerManager : MonoBehaviour
         {
             isAim = false;
 
+            multiAimConstraint.data.offset = new Vector3(0f, 0f, 0f);
+
             animator.SetLayerWeight(1, 0);
 
             if (zoomCorutine != null)
@@ -339,6 +367,9 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 에임 상태, 애니메이션, 총 레이캐스트 함수
+    /// </summary>
     void SetAnimator()
     {
         if (Input.GetKey(KeyCode.LeftShift))
@@ -361,22 +392,24 @@ public class PlayerManager : MonoBehaviour
                 isFire = true;
 
                 Ray ray = new Ray(mainCamera.transform.position, mainCamera.transform.forward);
-                RaycastHit hit;
+                RaycastHit[] hits = Physics.RaycastAll(ray, weaponMaxDistance, targetLayerMask);
 
-                if (Physics.Raycast(ray, out hit, weaponMaxDistance))
+                if(hits.Length > 0)
                 {
-                    Debug.Log("Hit : " + hit.collider.gameObject.name);
-                    Debug.DrawRay(ray.origin, hit.point, Color.red, 2.0f);
-
-                    if(hit.collider.gameObject.tag == "Zombie")
+                    int hitCount = 0;
+                    foreach(RaycastHit hit in hits)
                     {
-                        hit.collider.gameObject.GetComponent<ZombieManager>().hp -= 10;
-                        Debug.Log("좀비 hp: : " + hit.collider.gameObject.GetComponent<ZombieManager>().hp);
+                        //if (hitCount == 0 || hitCount == hits.Length)
+                        {
+                            Debug.Log("충돌 : " + hit.collider.name + ", count : " + hitCount);
+                            Debug.DrawLine(ray.origin, hit.point, Color.red, 2.0f);
+                        }
+                        hitCount++;
                     }
                 }
                 else
                 {
-                    Debug.DrawRay(ray.origin, ray.origin + ray.direction * weaponMaxDistance, Color.green, 2.0f);
+                    Debug.DrawLine(ray.origin, ray.origin + ray.direction * weaponMaxDistance, Color.green, 2.0f);
                 }
             }
         }
