@@ -56,7 +56,7 @@ public class PlayerManager : MonoBehaviour
     private int animationSpeed = 1;
     string currentAnimation;
 
-    private bool canMove = true;
+    private bool isCanMove = true;
 
     public Transform aimTarget;
 
@@ -73,8 +73,12 @@ public class PlayerManager : MonoBehaviour
     public GameObject crosshairObj;
     public GameObject itemIcon;
 
-    private bool hasItemRifle = false;
-    private bool canAim = false;
+    private bool isHasItemRifle = false;
+    private bool isCanAim = false;
+
+    public int haveBullet = 30;
+
+    public ParticleSystem rifleEffect;
 
 
     void Start()
@@ -100,9 +104,9 @@ public class PlayerManager : MonoBehaviour
 
         SetPersonShooter(); // 1인칭 or 3인칭 관리
 
-        if(hasItemRifle)
+        if(isHasItemRifle)
         {
-            if(canAim)
+            if(isCanAim)
             {
                 SettingZoom(); // 줌 상태 변경 함수
             }
@@ -114,7 +118,10 @@ public class PlayerManager : MonoBehaviour
 
         SetMove(); // 움직임 상태 세팅
 
-        SetPickUp(); // 픽업 행동 세팅
+        if(!isAim)
+        {
+            SetPickUp(); // 픽업 행동 세팅
+        }
 
         SetAnimationSpeed(); // 애니메이션 스피드 조절
     }
@@ -138,7 +145,7 @@ public class PlayerManager : MonoBehaviour
 
             if (stateInfo0.IsName("PickUp"))
             {
-                canMove = false;
+                isCanMove = false;
             }
         }
         else if (stateInfo1.IsName("Hit") && stateInfo1.normalizedTime < 1.0f)
@@ -148,7 +155,7 @@ public class PlayerManager : MonoBehaviour
         else
         {
             animationSpeed = 1;
-            canMove = true;
+            isCanMove = true;
         }
     }
 
@@ -159,6 +166,7 @@ public class PlayerManager : MonoBehaviour
             animator.SetTrigger("PickUp");
         }
     }
+
 
     void PlayPickUp()
     {
@@ -175,7 +183,7 @@ public class PlayerManager : MonoBehaviour
 
             if (hit.collider.name == "Rifle")
             {
-                hasItemRifle = true;
+                isHasItemRifle = true;
                 itemIcon.SetActive(true);
             }
         }
@@ -204,7 +212,7 @@ public class PlayerManager : MonoBehaviour
 
     void SetMove()
     {
-        if (!canMove)
+        if (!isCanMove)
         {
             moveSpeed = 0.0f;
         }
@@ -407,7 +415,7 @@ public class PlayerManager : MonoBehaviour
         {
             animator.SetTrigger("IsWeaponChange");
             RifleAKobj.SetActive(true);
-            canAim = true;
+            isCanAim = true;
         }
     }
 
@@ -427,12 +435,13 @@ public class PlayerManager : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            if (isAim)
+            if (isAim && haveBullet > 0)
             {
                 //Weapon Type MaxDistance Set
                 weaponMaxDistance = 1000.0f;
 
                 animator.SetTrigger("Fire");
+                haveBullet--;
                 isFire = true;
 
                 Ray ray = new Ray(mainCamera.transform.position, mainCamera.transform.forward);
@@ -464,6 +473,8 @@ public class PlayerManager : MonoBehaviour
                     Debug.DrawLine(ray.origin, ray.origin + ray.direction * weaponMaxDistance, Color.green, 2.0f);
                 }
             }
+
+            Debug.Log("남은 총알 : " + haveBullet);
         }
         if (Input.GetMouseButtonUp(0))
         {
@@ -483,6 +494,7 @@ public class PlayerManager : MonoBehaviour
     public void FireSoundOn()
     {
         audioSource.PlayOneShot(audioClipFire);
+        rifleEffect.Play();
     }
 
 
