@@ -451,20 +451,23 @@ public class PlayerManager : MonoBehaviour
 
                 if (hits.Length > 0)
                 {
-                    int hitCount = 0;
-                    foreach (RaycastHit hit in hits)
-                    {
-                        Debug.Log("충돌 : " + hit.collider.name + ", count : " + hitCount);
-                        Debug.DrawLine(ray.origin, hit.point, Color.red, 2.0f);
-                        hitCount++;
-                    }
-
                     // 거리를 기준으로 정렬
                     hits = hits.OrderBy(hit => hit.distance).ToArray();
 
-                    foreach (RaycastHit hit in hits)
+                    if(hits.Length > 2)
                     {
-                        Debug.Log(hit.collider.gameObject.name + " - 거리: " + hit.distance);
+                        for (int i = 0; i < 2; i++)
+                        {
+                            Debug.Log("충돌 : " + hits[i].collider.name);
+                            Debug.DrawLine(ray.origin, hits[i].point, Color.red, 2.0f);
+                            hits[i].collider.GetComponent<ZombieManager>().TakeDamage(3.0f);
+                        }
+                    }
+                    else
+                    {
+                        Debug.Log("충돌 : " + hits[0].collider.name);
+                        Debug.DrawLine(ray.origin, hits[0].point, Color.red, 2.0f);
+                        hits[0].collider.GetComponent<ZombieManager>().TakeDamage(3.0f);
                     }
                 }
                 else

@@ -14,7 +14,8 @@ public enum EZombieState
 
 public class ZombieManager : MonoBehaviour
 {
-    public EZombieState currentState = EZombieState.Idle;
+    private EZombieState currentState;
+    public EZombieState defaultState = EZombieState.Idle;
     public Transform target;
     public float attackRange = 1.0f; // 공격 범위
     public float attackDelay = 2.0f; // 공격 딜레이
@@ -34,7 +35,9 @@ public class ZombieManager : MonoBehaviour
 
     private Animator animator;
     public AudioClip zombieAttackSound;
-    public AudioClip chaseAttackSound;
+    public AudioClip zombieChaseSound;
+    public AudioClip zombieTakeDamageSound;
+    public AudioClip zombieDieSound;
     private AudioSource audioSource;
 
     void Start()
@@ -42,6 +45,7 @@ public class ZombieManager : MonoBehaviour
         animator = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
 
+        currentState = defaultState;
         ChangeState(currentState); // 상태 초기화
         currentMoveSpeed = moveSpeed;
     }
@@ -164,7 +168,7 @@ public class ZombieManager : MonoBehaviour
         Debug.Log(gameObject.name + " : 추격중");
 
         animator.SetBool("isMove", true);
-        audioSource.PlayOneShot(chaseAttackSound);
+        audioSource.PlayOneShot(zombieChaseSound);
 
         while (currentState == EZombieState.Chase)
         {
@@ -181,7 +185,7 @@ public class ZombieManager : MonoBehaviour
             }
             else if (distance > trackingRange * 1.5f)
             {
-                ChangeState(EZombieState.Patrol);
+                ChangeState(defaultState);
             }
 
             yield return null;
@@ -204,7 +208,7 @@ public class ZombieManager : MonoBehaviour
 
         if(distance > trackingRange)
         {
-            ChangeState(EZombieState.Patrol);
+            ChangeState(defaultState);
         }
         else if(distance > attackRange)
         {
@@ -238,30 +242,40 @@ public class ZombieManager : MonoBehaviour
         ChangeState(EZombieState.Idle);
     }
 
-    public IEnumerator TakeDamage(float damage)
+    public void TakeDamage(float damage)
     {
         // 데미지 피해 코드
         Debug.Log(gameObject.name + " : " + damage + " : 데미지 받음");
-        animator.SetTrigger("isTakeDamage");
         zombieHp -= damage;
 
         // 상태 확인, 변경
+        float distance = Vector3.Distance(transform.position, target.position);
+
         if (zombieHp <= 0)
         {
             ChangeState(EZombieState.Die);
         }
         else
         {
-            ChangeState(EZombieState.Chase);
+            animator.SetTrigger("isTakeDamage");
+            audioSource.PlayOneShot(zombieTakeDamageSound);
+            if(distance > trackingRange)
+            {
+                ChangeState(defaultState);
+            }
+            else
+            {
+                ChangeState(EZombieState.Chase);
+            }
         }
-
-        yield return null;
     }
 
     private IEnumerator Die()
     {
+        currentMoveSpeed = 0;
         Debug.Log(gameObject.name + " : 죽음");
         animator.SetTrigger("isDie");
+        audioSource.PlayOneShot(zombieDieSound);
         yield return new WaitForSeconds(3.0f);
         gameObject.SetActive(false);
     }

@@ -31008,9 +31008,9 @@ GameObject:
   - component: {fileID: 6657786026033824894}
   - component: {fileID: 6657786026033824893}
   - component: {fileID: 6657786026033824896}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Zombie
-  m_TagString: Untagged
+  m_TagString: Zombie
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -34330,7 +34330,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 439fef2c3c060fe47989a92f0fbcebd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentState: 4
+  defaultState: 0
   target: {fileID: 7272936507637966644}
   attackRange: 1
   attackDelay: 1.5
@@ -34341,7 +34341,9 @@ MonoBehaviour:
   trackingRange: 3
   idleTime: 2
   zombieAttackSound: {fileID: 8300000, guid: 9f8a1e6741a342647b9c0055e1e0a7b8, type: 3}
-  chaseAttackSound: {fileID: 8300000, guid: 27b98a8c68f991b408c5c6afff25358c, type: 3}
+  zombieChaseSound: {fileID: 8300000, guid: 27b98a8c68f991b408c5c6afff25358c, type: 3}
+  zombieTakeDamageSound: {fileID: 8300000, guid: f390d65ed5b9f4cb48199feda830b4c5, type: 3}
+  zombieDieSound: {fileID: 8300000, guid: c5e72c14120434b7d8c3248afc4851b6, type: 3}
 --- !u!82 &6657786026033824896
 AudioSource:
   m_ObjectHideFlags: 0
