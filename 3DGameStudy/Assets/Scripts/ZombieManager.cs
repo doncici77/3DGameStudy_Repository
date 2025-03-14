@@ -236,6 +236,8 @@ public class ZombieManager : MonoBehaviour
             timer += Time.deltaTime;
             yield return null;
         }
+
+        ChangeState(EZombieState.Idle);
     }
 
     IEnumerator Die()
