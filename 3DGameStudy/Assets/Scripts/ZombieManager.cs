@@ -4,11 +4,10 @@ using UnityEngine;
 
 public enum EZombieState
 {
-    Patol, // 순찰모드
+    Patrol, // 순찰모드
     Chase, //추적
     Attack, // 공격
     Evade, // 도망
-    TakeDamage, // 데미지를 받음
     Idle, // 서있는 상태
     Die // 죽음
 }
@@ -23,6 +22,7 @@ public class ZombieManager : MonoBehaviour
     public Transform[] patrolPoints; // 순찰 경로 지점들
     private int currentPoint = 0; // 현재 순찰 경로 지점 인덱스
     public float moveSpeed = 2.0f; // 이동속도
+    private float currentMoveSpeed = 0;
     public float trackingRange = 3.0f; // 추적 범위 설정
     private bool isAttack = false; // 공격 상태
     private float evadeRange = 5.0f; // 도망 상태 회피 거리
@@ -34,6 +34,7 @@ public class ZombieManager : MonoBehaviour
 
     private Animator animator;
     public AudioClip zombieAttackSound;
+    public AudioClip chaseAttackSound;
     private AudioSource audioSource;
 
     void Start()
@@ -41,14 +42,8 @@ public class ZombieManager : MonoBehaviour
         animator = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
 
-        if (currentState == EZombieState.Idle)
-        {
-            Idle();
-        }
-        else if(currentState == EZombieState.Patol)
-        {
-            Patrol();
-        }
+        ChangeState(currentState); // 상태 초기화
+        currentMoveSpeed = moveSpeed;
     }
 
     void Update()
@@ -80,7 +75,7 @@ public class ZombieManager : MonoBehaviour
                 stateRoutine = StartCoroutine(Idle()); // stateRoutine에 현재 진행중인 코루틴 함수 저장
                 break;
 
-            case EZombieState.Patol:
+            case EZombieState.Patrol:
                 stateRoutine = StartCoroutine(Patrol());
                 break;
 
@@ -96,17 +91,13 @@ public class ZombieManager : MonoBehaviour
                 stateRoutine = StartCoroutine(Evade());
                 break;
 
-            case EZombieState.TakeDamage:
-                stateRoutine = StartCoroutine(TakeDamage());
-                break;
-
             case EZombieState.Die:
                 stateRoutine = StartCoroutine(Die());
                 break;
         }
     }
 
-    IEnumerator Idle()
+    private IEnumerator Idle()
     {
         Debug.Log(gameObject.name + " : 대기중");
 
@@ -131,20 +122,20 @@ public class ZombieManager : MonoBehaviour
         }
     }
 
-    IEnumerator Patrol()
+    private IEnumerator Patrol()
     {
         Debug.Log(gameObject.name + " : 순찰중");
 
         animator.SetBool("isMove", true);
 
-        while (currentState == EZombieState.Patol)
+        while (currentState == EZombieState.Patrol)
         {
             if(patrolPoints.Length > 0) // 순찰포인트가 2개 이상일때
             {
                 // 순찰
                 Transform targetPoint = patrolPoints[currentPoint];
                 Vector3 direction = (targetPoint.position - transform.position).normalized;
-                transform.position += direction * moveSpeed * Time.deltaTime;
+                transform.position += direction * currentMoveSpeed * Time.deltaTime;
                 transform.LookAt(targetPoint.position);
 
                 if (Vector3.Distance(transform.position, targetPoint.position) < 0.3)
@@ -168,17 +159,18 @@ public class ZombieManager : MonoBehaviour
         }
     }
 
-    IEnumerator Chase(Transform target)
+    private IEnumerator Chase(Transform target)
     {
         Debug.Log(gameObject.name + " : 추격중");
 
         animator.SetBool("isMove", true);
+        audioSource.PlayOneShot(chaseAttackSound);
 
         while (currentState == EZombieState.Chase)
         {
             // 추적 코드
             Vector3 direction = (target.position - transform.position).normalized;
-            transform.position += direction * moveSpeed * Time.deltaTime;
+            transform.position += direction * currentMoveSpeed * Time.deltaTime;
             transform.LookAt(target.position);
 
             // 상태 확인, 변경
@@ -187,28 +179,34 @@ public class ZombieManager : MonoBehaviour
             {
                 ChangeState(EZombieState.Attack);
             }
-            else if (distance > evadeRange)
+            else if (distance > trackingRange * 1.5f)
             {
-                ChangeState(EZombieState.Idle);
+                ChangeState(EZombieState.Patrol);
             }
 
             yield return null;
         }
     }
 
-    IEnumerator Attack()
+    private IEnumerator Attack()
     {
         // 공격 코드
+        currentMoveSpeed = 0;
         Debug.Log(gameObject.name + " : 공격!!!!");
         transform.LookAt(target.position);
         animator.SetTrigger("isAttack");
 
         yield return new WaitForSeconds(attackDelay); // 공격후 딜레이 방생
+        currentMoveSpeed = moveSpeed;
 
         // 상태 확인, 변경
         float distance = Vector3.Distance(transform.position, target.position);
 
-        if (distance > attackRange)
+        if(distance > trackingRange)
+        {
+            ChangeState(EZombieState.Patrol);
+        }
+        else if(distance > attackRange)
         {
             ChangeState(EZombieState.Chase);
         }
@@ -218,7 +216,7 @@ public class ZombieManager : MonoBehaviour
         }
     }
 
-    IEnumerator Evade()
+    private IEnumerator Evade()
     {
         Debug.Log(gameObject.name + " : 도망중");
 
@@ -232,7 +230,7 @@ public class ZombieManager : MonoBehaviour
 
         while(currentState == EZombieState.Evade && timer < evadeTime)
         {
-            transform.position += evadeDirection * moveSpeed * Time.deltaTime;
+            transform.position += evadeDirection * currentMoveSpeed * Time.deltaTime;
             timer += Time.deltaTime;
             yield return null;
         }
@@ -240,17 +238,31 @@ public class ZombieManager : MonoBehaviour
         ChangeState(EZombieState.Idle);
     }
 
-    IEnumerator Die()
+    public IEnumerator TakeDamage(float damage)
     {
-        Debug.Log(gameObject.name + " : 죽음");
+        // 데미지 피해 코드
+        Debug.Log(gameObject.name + " : " + damage + " : 데미지 받음");
+        animator.SetTrigger("isTakeDamage");
+        zombieHp -= damage;
+
+        // 상태 확인, 변경
+        if (zombieHp <= 0)
+        {
+            ChangeState(EZombieState.Die);
+        }
+        else
+        {
+            ChangeState(EZombieState.Chase);
+        }
 
         yield return null;
     }
 
-    IEnumerator TakeDamage()
+    private IEnumerator Die()
     {
-        Debug.Log(gameObject.name + " : 데미지 받음");
-
-        yield return null;
+        Debug.Log(gameObject.name + " : 죽음");
+        animator.SetTrigger("isDie");
+        yield return new WaitForSeconds(3.0f);
+        gameObject.SetActive(false);
     }
 }

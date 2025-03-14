@@ -444,7 +444,7 @@ public class PlayerManager : MonoBehaviour
                 isFire = true;
                 StartCoroutine(DelayFire());
 
-                haveBullet--; // 테스트용 코드
+                // haveBullet--; // 테스트용 코드
 
                 Ray ray = new Ray(mainCamera.transform.position, mainCamera.transform.forward);
                 RaycastHit[] hits = Physics.RaycastAll(ray, weaponMaxDistance, targetLayerMask);
@@ -473,7 +473,7 @@ public class PlayerManager : MonoBehaviour
                 }
             }
 
-            Debug.Log("남은 총알 : " + haveBullet);
+            // Debug.Log("남은 총알 : " + haveBullet);
         }
 
         animator.SetFloat("Horizontal", horizontal);
