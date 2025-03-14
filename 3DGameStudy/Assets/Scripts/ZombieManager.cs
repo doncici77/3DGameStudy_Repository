@@ -1,3 +1,4 @@
+using System.Xml.Serialization;
 using UnityEngine;
 
 public enum EZombieState
@@ -6,7 +7,7 @@ public enum EZombieState
     Chase, //추적
     Attack, // 공격
     Evade, // 도망
-    Damage, // 데미지를 받음
+    TakeDamage, // 데미지를 받음
     Idle, // 서있는 상태
     Die // 죽음
 }
@@ -38,32 +39,107 @@ public class ZombieManager : MonoBehaviour
     {
         distanceTotarget = Vector3.Distance(transform.position, target.position);
 
+        UpdateState();
+        StartState();
+    }
+
+    void UpdateState()
+    {
         if (distanceTotarget < attackRange)
         {
-            Debug.Log("공격!!!!");
+            currentState = EZombieState.Attack;
         }
         else if (distanceTotarget < trackingRange)
         {
-            Vector3 direction = (target.position - transform.position).normalized;
-            transform.position += direction * moveSpeed * Time.deltaTime;
-            transform.LookAt(target.position);
-            Debug.Log("추격중 : " + distanceTotarget);
+            currentState = EZombieState.Chase;
         }
         else
         {
-            if(patrolPoints.Length > 0)
-            {
-                Debug.Log("순찰중");
-                Transform targetPoint = patrolPoints[currentPoint];
-                Vector3 direction = (targetPoint.position - transform.position).normalized;
-                transform.position += direction * moveSpeed * Time.deltaTime;
-                transform.LookAt(targetPoint.position);
+            currentState = EZombieState.Patol;
+        }
+    }
 
-                if(Vector3.Distance(transform.position, targetPoint.position) < 0.3)
-                {
-                    currentPoint = (currentPoint + 1) % patrolPoints.Length;
-                }
+    void StartState()
+    {
+        switch (currentState)
+        {
+            case EZombieState.Idle:
+                Idle();
+                break;
+
+            case EZombieState.Patol:
+                Patrol();
+                break;
+
+            case EZombieState.Chase:
+                Chase(target);
+                break;
+
+            case EZombieState.Attack:
+                Attack();
+                break;
+
+            case EZombieState.Evade:
+                Evade();
+                break;
+
+            case EZombieState.TakeDamage:
+                TakeDamage();
+                break;
+
+            case EZombieState.Die:
+                Die();
+                break;
+        }
+    }
+
+    void Patrol()
+    {
+        if (patrolPoints.Length > 0)
+        {
+            Debug.Log(gameObject.name + " : 순찰중");
+            Transform targetPoint = patrolPoints[currentPoint];
+            Vector3 direction = (targetPoint.position - transform.position).normalized;
+            transform.position += direction * moveSpeed * Time.deltaTime;
+            transform.LookAt(targetPoint.position);
+
+            if (Vector3.Distance(transform.position, targetPoint.position) < 0.3)
+            {
+                currentPoint = (currentPoint + 1) % patrolPoints.Length;
             }
         }
+    }
+
+    void Chase(Transform target)
+    {
+        Vector3 direction = (target.position - transform.position).normalized;
+        transform.position += direction * moveSpeed * Time.deltaTime;
+        transform.LookAt(target.position);
+        Debug.Log(gameObject.name + " : 추격중");
+    }
+
+    void Evade()
+    {
+        Debug.Log(gameObject.name + " : 도망중");
+    }
+
+    void Idle()
+    {
+        Debug.Log(gameObject.name + " : 대기중");
+    }
+
+    void Attack()
+    {
+        Debug.Log(gameObject.name + " : 공격!!!!");
+    }
+
+    void Die()
+    {
+        Debug.Log(gameObject.name + " : 죽음");
+    }
+
+    void TakeDamage()
+    {
+        Debug.Log(gameObject.name + " : 데미지 받음");
     }
 }
