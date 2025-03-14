@@ -1,0 +1,29 @@
+fileFormatVersion: 2
+guid: 69b591c70a37f1940a5d42d04ce18db1
+timeCreated: 1458181661
+licenseType: Store
+AudioImporter:
+  serializedVersion: 6
+  defaultSettings:
+    loadType: 0
+    sampleRateSetting: 0
+    sampleRateOverride: 44100
+    compressionFormat: 1
+    quality: 1
+    conversionMode: 0
+  platformSettingOverrides: {}
+  forceToMono: 0
+  normalize: 1
+  preloadAudioData: 1
+  loadInBackground: 0
+  3D: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 58260
+  packageName: Punch Sound Pack
+  packageVersion: 1.0
+  assetPath: Assets/Gamemaster Audio - Punch Sound Pack/Punch Sounds/punch_heavy_huge_distorted_02.wav
+  uploadId: 108122

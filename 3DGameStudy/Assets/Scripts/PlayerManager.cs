@@ -454,11 +454,8 @@ public class PlayerManager : MonoBehaviour
                     int hitCount = 0;
                     foreach (RaycastHit hit in hits)
                     {
-                        //if (hitCount == 0 || hitCount == hits.Length)
-                        {
-                            Debug.Log("충돌 : " + hit.collider.name + ", count : " + hitCount);
-                            Debug.DrawLine(ray.origin, hit.point, Color.red, 2.0f);
-                        }
+                        Debug.Log("충돌 : " + hit.collider.name + ", count : " + hitCount);
+                        Debug.DrawLine(ray.origin, hit.point, Color.red, 2.0f);
                         hitCount++;
                     }
 
@@ -478,10 +475,6 @@ public class PlayerManager : MonoBehaviour
 
             Debug.Log("남은 총알 : " + haveBullet);
         }
-        /*if (Input.GetMouseButtonUp(0))
-        {
-            isFire = false;
-        }*/
 
         animator.SetFloat("Horizontal", horizontal);
         animator.SetFloat("Vertical", vertical);
@@ -533,6 +526,11 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 박스 레이캐스트 디버깅 함수
+    /// </summary>
+    /// <param name="origin"></param>
+    /// <param name="direction"></param>
     void DebugBox(Vector3 origin, Vector3 direction)
     {
         Vector3 endPoint = origin + direction * castDistance;

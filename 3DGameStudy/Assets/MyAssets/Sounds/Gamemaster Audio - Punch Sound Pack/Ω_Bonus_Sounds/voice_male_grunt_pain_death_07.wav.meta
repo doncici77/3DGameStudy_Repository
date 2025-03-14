@@ -1,0 +1,29 @@
+fileFormatVersion: 2
+guid: a098f9df7ef01be43965c4199271e8db
+timeCreated: 1458181664
+licenseType: Store
+AudioImporter:
+  serializedVersion: 6
+  defaultSettings:
+    loadType: 0
+    sampleRateSetting: 0
+    sampleRateOverride: 44100
+    compressionFormat: 1
+    quality: 1
+    conversionMode: 0
+  platformSettingOverrides: {}
+  forceToMono: 0
+  normalize: 1
+  preloadAudioData: 1
+  loadInBackground: 0
+  3D: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 58260
+  packageName: Punch Sound Pack
+  packageVersion: 1.0
+  assetPath: "Assets/Gamemaster Audio - Punch Sound Pack/\u03A9_Bonus_Sounds/voice_male_grunt_pain_death_07.wav"
+  uploadId: 108122

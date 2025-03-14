@@ -1,0 +1,29 @@
+fileFormatVersion: 2
+guid: 345a5919b2ac7d24380ccc2ec9c05b28
+timeCreated: 1458181657
+licenseType: Store
+AudioImporter:
+  serializedVersion: 6
+  defaultSettings:
+    loadType: 0
+    sampleRateSetting: 0
+    sampleRateOverride: 44100
+    compressionFormat: 1
+    quality: 1
+    conversionMode: 0
+  platformSettingOverrides: {}
+  forceToMono: 0
+  normalize: 1
+  preloadAudioData: 1
+  loadInBackground: 0
+  3D: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 58260
+  packageName: Punch Sound Pack
+  packageVersion: 1.0
+  assetPath: "Assets/Gamemaster Audio - Punch Sound Pack/\u03A9_Bonus_Sounds/lever_turn_push_crank_handle_small_05.wav"
+  uploadId: 108122

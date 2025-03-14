@@ -22,75 +22,41 @@ public class ZombieManager : MonoBehaviour
     public Transform[] patrolPoints; // 순찰 경로 지점들
     private int currentPoint = 0; // 현재 순찰 경로 지점 인덱스
     public float moveSpeed = 2.0f; // 이동속도
-    private float trackingRange = 3.0f; // 추적 범위 설정
+    public float trackingRange = 3.0f; // 추적 범위 설정
     private bool isAttack = false; // 공격 상태
     private float evadeRange = 5.0f; // 도망 상태 회피 거리
     private float zombieHp = 10.0f; // 좀비 체력
     private float distanceTotarget; // target과의 거리 계산 값
     private bool isWaiting = false; // 상태 전환 후 대기상태 여부
     public float idleTime = 2.0f; // 각 상태 전환 후 대기시간
+    private Coroutine stateRoutine; // ??
+
+    private Animator animator;
+    public AudioClip zombieAttackSound;
+    private AudioSource audioSource;
 
     void Start()
     {
-        
+        animator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
+
+        if (currentState == EZombieState.Idle)
+        {
+            Idle();
+        }
+        else if(currentState == EZombieState.Patol)
+        {
+            Patrol();
+        }
     }
 
     void Update()
     {
-        distanceTotarget = Vector3.Distance(transform.position, target.position);
-
-        UpdateState();
-        StartState();
-    }
-
-    void UpdateState()
-    {
-        if (distanceTotarget < attackRange)
+        if(target != null)
         {
-            currentState = EZombieState.Attack;
+            distanceTotarget = Vector3.Distance(transform.position, target.position);
         }
-        else if (distanceTotarget < trackingRange)
-        {
-            currentState = EZombieState.Chase;
-        }
-        else
-        {
-            currentState = EZombieState.Patol;
-        }
-    }
 
-    void StartState()
-    {
-        switch (currentState)
-        {
-            case EZombieState.Idle:
-                Idle();
-                break;
-
-            case EZombieState.Patol:
-                Patrol();
-                break;
-
-            case EZombieState.Chase:
-                Chase(target);
-                break;
-
-            case EZombieState.Attack:
-                Attack();
-                break;
-
-            case EZombieState.Evade:
-                Evade();
-                break;
-
-            case EZombieState.TakeDamage:
-                TakeDamage();
-                break;
-
-            case EZombieState.Die:
-                Die();
-                break;
-        }
     }
 
     void Patrol()
@@ -131,6 +97,8 @@ public class ZombieManager : MonoBehaviour
     void Attack()
     {
         Debug.Log(gameObject.name + " : 공격!!!!");
+
+        animator.SetTrigger("isAttack");
     }
 
     void Die()
@@ -141,5 +109,27 @@ public class ZombieManager : MonoBehaviour
     void TakeDamage()
     {
         Debug.Log(gameObject.name + " : 데미지 받음");
+    }
+
+    void AttackSoundOn()
+    {
+        audioSource.PlayOneShot(zombieAttackSound);
+    }
+
+    public void ChangeState(EZombieState newState)
+    {
+        if(stateRoutine != null)
+        {
+            StopCoroutine(stateRoutine);
+        }
+
+        currentState = newState;
+
+        switch(currentState)
+        {
+            case EZombieState.Idle:
+                stateRoutine = StopCoroutine(Idle());
+                break;
+        }
     }
 }
