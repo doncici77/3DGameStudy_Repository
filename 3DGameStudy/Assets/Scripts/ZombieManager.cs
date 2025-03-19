@@ -38,7 +38,6 @@ public class ZombieManager : MonoBehaviour
     private Animator animator;
     public AudioClip zombieAttackSound;
     public AudioClip zombieChaseSound;
-    public AudioClip zombieTakeDamageSound;
     public AudioClip zombieDieSound;
     private AudioSource audioSource;
 
@@ -261,7 +260,6 @@ public class ZombieManager : MonoBehaviour
         else
         {
             animator.SetTrigger("isTakeDamage");
-            audioSource.PlayOneShot(zombieTakeDamageSound);
             if(distance > trackingRange)
             {
                 ChangeState(defaultState);

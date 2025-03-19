@@ -3,7 +3,8 @@ using System.Collections;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Android;
-using UnityEngine.Animations.Rigging; // NameSpace : 소속
+using UnityEngine.Animations.Rigging;
+using UnityEngine.UI; // NameSpace : 소속
 
 public class PlayerManager : MonoBehaviour
 {
@@ -76,10 +77,15 @@ public class PlayerManager : MonoBehaviour
     private bool isHasItemRifle = false;
     private bool isCanAim = false;
 
-    public int haveBullet = 30;
-
     public ParticleSystem rifleEffect;
     private float fireDelay = 0.5f;
+
+    public ParticleSystem damageParticleSystem;
+    public AudioClip audioClipDamange;
+
+    public Text bulletText;
+    private int firebulletCount = 30;
+    private int savebulletCount = 120;
 
     void Start()
     {
@@ -94,6 +100,8 @@ public class PlayerManager : MonoBehaviour
         RifleAKobj.SetActive(false);
         crosshairObj.SetActive(false);
         itemIcon.SetActive(false);
+        bulletText.text = $"{firebulletCount.ToString()}/{savebulletCount.ToString()}";
+        bulletText.gameObject.SetActive(false);
     }
 
     void Update()
@@ -113,6 +121,8 @@ public class PlayerManager : MonoBehaviour
 
             SetRifle(); // 총 꺼내는 애니메이션 함수
         }
+
+        Fire(); // 총 발사 함수
 
         SetAnimator(); // 에니메이션 세팅
 
@@ -186,6 +196,15 @@ public class PlayerManager : MonoBehaviour
                 isHasItemRifle = true;
                 itemIcon.SetActive(true);
             }
+            if (hit.collider.name == "Ammo")
+            {
+                savebulletCount += 30;
+                if(savebulletCount >= 120)
+                {
+                    savebulletCount = 120;
+                }
+                bulletText.text = $"{firebulletCount}/{savebulletCount}";
+            }
         }
     }
 
@@ -254,8 +273,8 @@ public class PlayerManager : MonoBehaviour
     /// </summary>
     void FirstPersonMovement()
     {
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
+        horizontal = Input.GetAxis("Horizontal");
+        vertical = Input.GetAxis("Vertical");
 
         // 앞뒤좌우 누를때 카메라 위치 기준으로 변화값 moveDirection 저장
         Vector3 moveDirection = cameraTransform.forward * vertical + cameraTransform.right * horizontal;
@@ -416,6 +435,65 @@ public class PlayerManager : MonoBehaviour
             animator.SetTrigger("IsWeaponChange");
             RifleAKobj.SetActive(true);
             isCanAim = true;
+            bulletText.gameObject.SetActive(true);
+        }
+    }
+
+    void Fire()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (isAim && !isFire)
+            {
+                if(firebulletCount > 0)
+                {
+                    //Weapon Type MaxDistance Set
+                    weaponMaxDistance = 1000.0f;
+
+                    firebulletCount--;
+                    bulletText.text = $"{firebulletCount.ToString()}/{savebulletCount.ToString()}";
+                    animator.SetTrigger("Fire");
+                    isFire = true;
+                    StartCoroutine(DelayFire());
+
+                    Ray ray = new Ray(mainCamera.transform.position, mainCamera.transform.forward);
+                    RaycastHit[] hits = Physics.RaycastAll(ray, weaponMaxDistance, targetLayerMask);
+
+                    if (hits.Length > 0)
+                    {
+                        // 거리를 기준으로 정렬
+                        hits = hits.OrderBy(hit => hit.distance).ToArray();
+
+                        if (hits.Length > 2)
+                        {
+                            for (int i = 0; i < 2; i++)
+                            {
+                                Debug.Log("충돌 : " + hits[i].collider.name);
+                                Debug.DrawLine(ray.origin, hits[i].point, Color.red, 2.0f);
+                                hits[i].collider.GetComponent<ZombieManager>().TakeDamage(3.0f);
+
+                                ParticleSystem particle = Instantiate(damageParticleSystem, hits[i].point, Quaternion.identity);
+                                particle.Play();
+                                audioSource.PlayOneShot(audioClipDamange);
+                            }
+                        }
+                        else
+                        {
+                            Debug.Log("충돌 : " + hits[0].collider.name);
+                            Debug.DrawLine(ray.origin, hits[0].point, Color.red, 2.0f);
+                            hits[0].collider.GetComponent<ZombieManager>().TakeDamage(3.0f);
+
+                            ParticleSystem particle = Instantiate(damageParticleSystem, hits[0].point, Quaternion.identity);
+                            particle.Play();
+                            audioSource.PlayOneShot(audioClipDamange);
+                        }
+                    }
+                    else
+                    {
+                        Debug.DrawLine(ray.origin, ray.origin + ray.direction * weaponMaxDistance, Color.green, 2.0f);
+                    }
+                }
+            }
         }
     }
 
@@ -431,52 +509,6 @@ public class PlayerManager : MonoBehaviour
         else
         {
             isRunnig = false;
-        }
-
-        if (Input.GetMouseButtonDown(0))
-        {
-            if (isAim && haveBullet > 0 && !isFire)
-            {
-                //Weapon Type MaxDistance Set
-                weaponMaxDistance = 1000.0f;
-
-                animator.SetTrigger("Fire");
-                isFire = true;
-                StartCoroutine(DelayFire());
-
-                // haveBullet--; // 테스트용 코드
-
-                Ray ray = new Ray(mainCamera.transform.position, mainCamera.transform.forward);
-                RaycastHit[] hits = Physics.RaycastAll(ray, weaponMaxDistance, targetLayerMask);
-
-                if (hits.Length > 0)
-                {
-                    // 거리를 기준으로 정렬
-                    hits = hits.OrderBy(hit => hit.distance).ToArray();
-
-                    if(hits.Length > 2)
-                    {
-                        for (int i = 0; i < 2; i++)
-                        {
-                            Debug.Log("충돌 : " + hits[i].collider.name);
-                            Debug.DrawLine(ray.origin, hits[i].point, Color.red, 2.0f);
-                            hits[i].collider.GetComponent<ZombieManager>().TakeDamage(3.0f);
-                        }
-                    }
-                    else
-                    {
-                        Debug.Log("충돌 : " + hits[0].collider.name);
-                        Debug.DrawLine(ray.origin, hits[0].point, Color.red, 2.0f);
-                        hits[0].collider.GetComponent<ZombieManager>().TakeDamage(3.0f);
-                    }
-                }
-                else
-                {
-                    Debug.DrawLine(ray.origin, ray.origin + ray.direction * weaponMaxDistance, Color.green, 2.0f);
-                }
-            }
-
-            // Debug.Log("남은 총알 : " + haveBullet);
         }
 
         animator.SetFloat("Horizontal", horizontal);
