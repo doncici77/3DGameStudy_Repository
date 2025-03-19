@@ -53,6 +53,9 @@ public class PlayerManager : MonoBehaviour
     private AudioSource audioSource;
     public AudioClip audioClipWeaponChange;
     public AudioClip audioClipPickUp;
+    public AudioClip audioClipDamange;
+    public AudioClip audioReload;
+    public AudioClip audioFlashLightOn;
     public GameObject RifleAKobj;
     private int animationSpeed = 1;
     string currentAnimation;
@@ -81,11 +84,13 @@ public class PlayerManager : MonoBehaviour
     private float fireDelay = 0.5f;
 
     public ParticleSystem damageParticleSystem;
-    public AudioClip audioClipDamange;
 
     public Text bulletText;
     private int firebulletCount = 30;
     private int savebulletCount = 120;
+
+    public GameObject flashLightObj;
+    private bool isFlashLightOn = false;
 
     void Start()
     {
@@ -102,6 +107,7 @@ public class PlayerManager : MonoBehaviour
         itemIcon.SetActive(false);
         bulletText.text = $"{firebulletCount.ToString()}/{savebulletCount.ToString()}";
         bulletText.gameObject.SetActive(false);
+        flashLightObj.SetActive(false);
     }
 
     void Update()
@@ -120,6 +126,8 @@ public class PlayerManager : MonoBehaviour
             }
 
             SetRifle(); // 총 꺼내는 애니메이션 함수
+
+            Reload(); // 재장전 함수
         }
 
         Fire(); // 총 발사 함수
@@ -134,6 +142,11 @@ public class PlayerManager : MonoBehaviour
         }
 
         SetAnimationSpeed(); // 애니메이션 스피드 조절
+
+        if(Input.GetKeyDown(KeyCode.Q))
+        {
+            ActionFlashLight();
+        }
     }
 
     void UpdateAimTarget()
@@ -206,6 +219,26 @@ public class PlayerManager : MonoBehaviour
                 bulletText.text = $"{firebulletCount}/{savebulletCount}";
             }
         }
+    }
+
+    void Reload()
+    {
+        if(Input.GetKeyDown(KeyCode.R))
+        {
+            animator.SetTrigger("Reload");
+            audioSource.PlayOneShot(audioReload);
+
+            savebulletCount = savebulletCount - (30 - firebulletCount);
+            firebulletCount = 30;
+            bulletText.text = $"{firebulletCount}/{savebulletCount}";
+        }
+    }
+
+    void ActionFlashLight()
+    {
+        audioSource.PlayOneShot(audioFlashLightOn);
+        isFlashLightOn = !isFlashLightOn;
+        flashLightObj.SetActive(isFlashLightOn);
     }
 
     void SetMouseScope()

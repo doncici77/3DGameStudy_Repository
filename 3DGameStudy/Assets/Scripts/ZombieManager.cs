@@ -1,8 +1,6 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Xml.Serialization;
 using UnityEngine;
+using UnityEngine.AI;
 
 public enum EZombieState
 {
@@ -41,10 +39,14 @@ public class ZombieManager : MonoBehaviour
     public AudioClip zombieDieSound;
     private AudioSource audioSource;
 
+    private NavMeshAgent agent;
+
     void Start()
     {
         animator = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
+
+        agent = GetComponent<NavMeshAgent>();
 
         currentState = defaultState;
         ChangeState(currentState); // 상태 초기화
