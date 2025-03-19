@@ -143,8 +143,12 @@ public class ZombieManager : MonoBehaviour
                 // 순찰
                 Transform targetPoint = patrolPoints[currentPoint];
                 Vector3 direction = (targetPoint.position - transform.position).normalized;
-                transform.position += direction * currentMoveSpeed * Time.deltaTime;
-                transform.LookAt(targetPoint.position);
+                agent.speed = moveSpeed;
+                agent.isStopped = false;
+                agent.destination = targetPoint.position;
+
+                //transform.position += direction * currentMoveSpeed * Time.deltaTime;
+                //transform.LookAt(targetPoint.position);
 
                 if (Vector3.Distance(transform.position, targetPoint.position) < 0.3)
                 {
@@ -178,8 +182,12 @@ public class ZombieManager : MonoBehaviour
         {
             // 추적 코드
             Vector3 direction = (target.position - transform.position).normalized;
-            transform.position += direction * currentMoveSpeed * Time.deltaTime;
-            transform.LookAt(target.position);
+            agent.speed = moveSpeed;
+            agent.isStopped = false;
+            agent.destination = target.position;
+
+            //transform.position += direction * currentMoveSpeed * Time.deltaTime;
+            //transform.LookAt(target.position);
 
             // 상태 확인, 변경
             float distance = Vector3.Distance(transform.position, target.position);
@@ -201,7 +209,9 @@ public class ZombieManager : MonoBehaviour
         // 공격 코드
         currentMoveSpeed = 0;
         Debug.Log(gameObject.name + " : 공격!!!!");
-        transform.LookAt(target.position);
+        //transform.LookAt(target.position);agent.speed = moveSpeed;
+        agent.isStopped = true;
+        agent.destination = target.position;
         animator.SetTrigger("isAttack");
 
         yield return new WaitForSeconds(attackDelay); // 공격후 딜레이 방생
@@ -238,7 +248,7 @@ public class ZombieManager : MonoBehaviour
 
         while(currentState == EZombieState.Evade && timer < evadeTime)
         {
-            transform.position += evadeDirection * currentMoveSpeed * Time.deltaTime;
+            //transform.position += evadeDirection * currentMoveSpeed * Time.deltaTime;
             timer += Time.deltaTime;
             yield return null;
         }

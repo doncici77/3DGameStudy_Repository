@@ -318,6 +318,8 @@ public class PlayerManager : MonoBehaviour
         cameraTransform.rotation = Quaternion.Euler(pitch, yaw, 0);
 
         transform.rotation = Quaternion.Euler(0, cameraTransform.eulerAngles.y, 0);
+
+        UpdateAimTarget(); // 에임조정
     }
 
     /// <summary>
