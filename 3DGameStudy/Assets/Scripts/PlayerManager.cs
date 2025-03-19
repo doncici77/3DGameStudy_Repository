@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Android;
 using UnityEngine.Animations.Rigging;
+using UnityEngine.InputSystem.Processors;
 using UnityEngine.UI; // NameSpace : 소속
 
 public class PlayerManager : MonoBehaviour
@@ -96,6 +97,8 @@ public class PlayerManager : MonoBehaviour
 
     private bool isTakingDamage = false;
 
+    private bool isDead = false;
+
     public Text playerHpText;
 
     void Start()
@@ -119,40 +122,43 @@ public class PlayerManager : MonoBehaviour
 
     void Update()
     {
-        SetMouseScope(); // 마우스 움직임 및 범위 처리
-
-        CheckGround(); // 그라운드 체크?
-
-        SetPersonShooter(); // 1인칭 or 3인칭 관리
-
-        if(isHasItemRifle)
+        if (!isDead)
         {
-            if(isCanAim)
+            SetMouseScope(); // 마우스 움직임 및 범위 처리
+
+            CheckGround(); // 그라운드 체크?
+
+            SetPersonShooter(); // 1인칭 or 3인칭 관리
+
+            if (isHasItemRifle)
             {
-                SettingZoom(); // 줌 상태 변경 함수
+                if (isCanAim)
+                {
+                    SettingZoom(); // 줌 상태 변경 함수
+                }
+
+                SetRifle(); // 총 꺼내는 애니메이션 함수
+
+                Reload(); // 재장전 함수
             }
 
-            SetRifle(); // 총 꺼내는 애니메이션 함수
+            Fire(); // 총 발사 함수
 
-            Reload(); // 재장전 함수
-        }
+            SetAnimator(); // 에니메이션 세팅
 
-        Fire(); // 총 발사 함수
+            SetMove(); // 움직임 상태 세팅
 
-        SetAnimator(); // 에니메이션 세팅
+            if (!isAim)
+            {
+                SetPickUp(); // 픽업 행동 세팅
+            }
 
-        SetMove(); // 움직임 상태 세팅
+            SetAnimationSpeed(); // 애니메이션 스피드 조절
 
-        if(!isAim)
-        {
-            SetPickUp(); // 픽업 행동 세팅
-        }
-
-        SetAnimationSpeed(); // 애니메이션 스피드 조절
-
-        if(Input.GetKeyDown(KeyCode.Q))
-        {
-            ActionFlashLight();
+            if (Input.GetKeyDown(KeyCode.Q))
+            {
+                ActionFlashLight();
+            }
         }
     }
 
@@ -442,30 +448,35 @@ public class PlayerManager : MonoBehaviour
 
         if (Input.GetMouseButtonUp(1))
         {
-            isAim = false;
+            ZoomOut();
+        }
+    }
 
-            crosshairObj.SetActive(false);
+    void ZoomOut()
+    {
+        isAim = false;
 
-            multiAimConstraint.data.offset = new Vector3(0f, 0f, 0f);
-            flashLightObj.transform.localRotation = Quaternion.Euler(90, 0, 0);
+        crosshairObj.SetActive(false);
 
-            animator.SetLayerWeight(1, 0);
+        multiAimConstraint.data.offset = new Vector3(0f, 0f, 0f);
+        flashLightObj.transform.localRotation = Quaternion.Euler(90, 0, 0);
 
-            if (zoomCorutine != null)
-            {
-                StopCoroutine(zoomCorutine);
-            }
+        animator.SetLayerWeight(1, 0);
 
-            if (isFirstPerson) // 1인칭일 경우
-            {
-                SetTargetFov(defaultFov);
-                zoomCorutine = StartCoroutine(ZoomFieldOfView(targetFOV));
-            }
-            else
-            {
-                SetTargetDistance(thirdPersonDistance);
-                zoomCorutine = StartCoroutine(ZoomCamera(targetDistance));
-            }
+        if (zoomCorutine != null)
+        {
+            StopCoroutine(zoomCorutine);
+        }
+
+        if (isFirstPerson) // 1인칭일 경우
+        {
+            SetTargetFov(defaultFov);
+            zoomCorutine = StartCoroutine(ZoomFieldOfView(targetFOV));
+        }
+        else
+        {
+            SetTargetDistance(thirdPersonDistance);
+            zoomCorutine = StartCoroutine(ZoomCamera(targetDistance));
         }
     }
 
@@ -595,27 +606,38 @@ public class PlayerManager : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (isTakingDamage) return; // 이미 데미지를 받고 있으면 중복 방지
+        if (!isDead)
+        {
+            if (isTakingDamage) return; // 이미 데미지를 받고 있으면 중복 방지
 
-        if (other.gameObject.tag == "PlayerDamage")
-        {
-            Debug.Log("PlayerDamage" + other.gameObject.tag);
-            animator.SetTrigger("Damage");
-            audioSource.PlayOneShot(audioTakeDamage);
-            playerHp -= 30;
-            playerHpText.text = $"HP:{playerHp}";
-            StartCoroutine(DelayTakeDamage()); // 일정 시간 후 다시 가능하도록
+            if (other.gameObject.tag == "PlayerDamage")
+            {
+                Debug.Log("PlayerDamage" + other.gameObject.tag);
+                animator.SetTrigger("Damage");
+                audioSource.PlayOneShot(audioTakeDamage);
+                playerHp -= 30;
+
+                if (playerHp < 0)
+                {
+                    playerHp = 0;
+                    StartCoroutine(Dead());
+                    return;
+                }
+
+                playerHpText.text = $"HP:{playerHp}";
+                StartCoroutine(DelayTakeDamage()); // 일정 시간 후 다시 가능하도록
+            }
         }
-        else if (other.gameObject.tag == "Zombie")
-        {
-            Debug.Log("Zombie" + other.gameObject.tag);
-            FireSoundOn();
-            animator.SetTrigger("Damage");
-            characterController.enabled = false;
-            characterController.enabled = true;
-            playerHp -= 30;
-            StartCoroutine(DelayTakeDamage()); // 일정 시간 후 다시 가능하도록
-        }
+    }
+
+    private IEnumerator Dead()
+    {
+        Debug.Log("플레이어 죽음");
+        isDead = true;
+        ZoomOut();
+        animator.SetTrigger("Dead");
+        yield return new WaitForSeconds(4.0f);
+        gameObject.SetActive(false);
     }
 
     private IEnumerator DelayTakeDamage()
