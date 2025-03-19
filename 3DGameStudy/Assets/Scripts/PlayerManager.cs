@@ -56,6 +56,7 @@ public class PlayerManager : MonoBehaviour
     public AudioClip audioClipDamange;
     public AudioClip audioReload;
     public AudioClip audioFlashLightOn;
+    public AudioClip audioTakeDamage;
     public GameObject RifleAKobj;
     private int animationSpeed = 1;
     string currentAnimation;
@@ -91,6 +92,11 @@ public class PlayerManager : MonoBehaviour
 
     public GameObject flashLightObj;
     private bool isFlashLightOn = false;
+    private int playerHp = 100;
+
+    private bool isTakingDamage = false;
+
+    public Text playerHpText;
 
     void Start()
     {
@@ -106,6 +112,7 @@ public class PlayerManager : MonoBehaviour
         crosshairObj.SetActive(false);
         itemIcon.SetActive(false);
         bulletText.text = $"{firebulletCount.ToString()}/{savebulletCount.ToString()}";
+        playerHpText.text = $"HP:{playerHp}";
         bulletText.gameObject.SetActive(false);
         flashLightObj.SetActive(false);
     }
@@ -312,7 +319,7 @@ public class PlayerManager : MonoBehaviour
         // 앞뒤좌우 누를때 카메라 위치 기준으로 변화값 moveDirection 저장
         Vector3 moveDirection = cameraTransform.forward * vertical + cameraTransform.right * horizontal;
         moveDirection.y = 0;
-        characterController.Move(moveDirection * moveSpeed * Time.deltaTime);
+        characterController.Move(moveDirection.normalized * moveSpeed * Time.deltaTime);
 
         cameraTransform.position = playerHead.position;
         cameraTransform.rotation = Quaternion.Euler(pitch, yaw, 0);
@@ -331,7 +338,7 @@ public class PlayerManager : MonoBehaviour
         vertical = Input.GetAxis("Vertical");
 
         Vector3 move = transform.right * horizontal + transform.forward * vertical;
-        characterController.Move(move * moveSpeed * Time.deltaTime);
+        characterController.Move(move.normalized * moveSpeed * Time.deltaTime);
 
         UpdateCameraPosition();
     }
@@ -408,6 +415,7 @@ public class PlayerManager : MonoBehaviour
 
             // 캐릭터 회전
             multiAimConstraint.data.offset = new Vector3(-35.0f, 0f, 0f);
+            flashLightObj.transform.localRotation = Quaternion.Euler(125, 0, 0);
 
             animator.SetLayerWeight(1, 1);
 
@@ -439,6 +447,7 @@ public class PlayerManager : MonoBehaviour
             crosshairObj.SetActive(false);
 
             multiAimConstraint.data.offset = new Vector3(0f, 0f, 0f);
+            flashLightObj.transform.localRotation = Quaternion.Euler(90, 0, 0);
 
             animator.SetLayerWeight(1, 0);
 
@@ -586,14 +595,40 @@ public class PlayerManager : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Zombie")
+        if (isTakingDamage) return; // 이미 데미지를 받고 있으면 중복 방지
+
+        if (other.gameObject.tag == "PlayerDamage")
         {
+            Debug.Log("PlayerDamage" + other.gameObject.tag);
+            animator.SetTrigger("Damage");
+            audioSource.PlayOneShot(audioTakeDamage);
+            playerHp -= 30;
+            playerHpText.text = $"HP:{playerHp}";
+            StartCoroutine(DelayTakeDamage()); // 일정 시간 후 다시 가능하도록
+        }
+        else if (other.gameObject.tag == "Zombie")
+        {
+            Debug.Log("Zombie" + other.gameObject.tag);
             FireSoundOn();
             animator.SetTrigger("Damage");
             characterController.enabled = false;
-            transform.position = Vector3.zero;
             characterController.enabled = true;
+            playerHp -= 30;
+            StartCoroutine(DelayTakeDamage()); // 일정 시간 후 다시 가능하도록
         }
+    }
+
+    private IEnumerator DelayTakeDamage()
+    {
+        isTakingDamage = true;
+        yield return new WaitForSeconds(1.0f); // 1초 동안 중복 방지
+        isTakingDamage = false;
+    }
+
+    public void TakePlayerDamageOn()
+    {
+        audioSource.PlayOneShot(audioClipFire);
+        playerHp -= 30;
     }
 
     /// <summary>

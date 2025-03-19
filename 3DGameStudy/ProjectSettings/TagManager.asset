@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 3
   tags:
   - Zombie
+  - FxTemporaire
+  - CinemachineTarget
+  - PlayerDamage
   layers:
   - Default
   - TransparentFX

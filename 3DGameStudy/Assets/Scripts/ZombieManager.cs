@@ -1,4 +1,5 @@
 using System.Collections;
+using UnityEditor.Build.Content;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -23,7 +24,6 @@ public class ZombieManager : MonoBehaviour
     public Transform[] patrolPoints; // 순찰 경로 지점들
     private int currentPoint = 0; // 현재 순찰 경로 지점 인덱스
     public float moveSpeed = 2.0f; // 이동속도
-    private float currentMoveSpeed = 0;
     public float trackingRange = 3.0f; // 추적 범위 설정
     private bool isAttack = false; // 공격 상태
     private float evadeRange = 5.0f; // 도망 상태 회피 거리
@@ -40,6 +40,7 @@ public class ZombieManager : MonoBehaviour
     private AudioSource audioSource;
 
     private NavMeshAgent agent;
+    private bool isTakingDamage = false;
 
     void Start()
     {
@@ -50,7 +51,6 @@ public class ZombieManager : MonoBehaviour
 
         currentState = defaultState;
         ChangeState(currentState); // 상태 초기화
-        currentMoveSpeed = moveSpeed;
     }
 
     void Update()
@@ -111,6 +111,8 @@ public class ZombieManager : MonoBehaviour
 
         animator.SetBool("isMove", false);
         animator.Play("Zombie_Idle");
+
+        agent.isStopped = true;
 
         while (currentState == EZombieState.Idle)
         {
@@ -195,7 +197,7 @@ public class ZombieManager : MonoBehaviour
             {
                 ChangeState(EZombieState.Attack);
             }
-            else if (distance > trackingRange * 1.5f)
+            else if (distance > trackingRange)
             {
                 ChangeState(defaultState);
             }
@@ -207,7 +209,6 @@ public class ZombieManager : MonoBehaviour
     private IEnumerator Attack()
     {
         // 공격 코드
-        currentMoveSpeed = 0;
         Debug.Log(gameObject.name + " : 공격!!!!");
         //transform.LookAt(target.position);agent.speed = moveSpeed;
         agent.isStopped = true;
@@ -215,7 +216,6 @@ public class ZombieManager : MonoBehaviour
         animator.SetTrigger("isAttack");
 
         yield return new WaitForSeconds(attackDelay); // 공격후 딜레이 방생
-        currentMoveSpeed = moveSpeed;
 
         // 상태 확인, 변경
         float distance = Vector3.Distance(transform.position, target.position);
@@ -285,7 +285,10 @@ public class ZombieManager : MonoBehaviour
 
     private IEnumerator Die()
     {
-        currentMoveSpeed = 0;
+        agent.isStopped = true;
+        CapsuleCollider capsuleCollider = GetComponent<CapsuleCollider>();
+        capsuleCollider.enabled = false;
+
         Debug.Log(gameObject.name + " : 죽음");
         animator.SetTrigger("isDie");
         audioSource.PlayOneShot(zombieDieSound);

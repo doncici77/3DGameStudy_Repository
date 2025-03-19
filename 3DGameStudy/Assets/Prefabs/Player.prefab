@@ -22745,14 +22745,15 @@ MonoBehaviour:
   zoomFov: 30
   gravity: -9.81
   jumpHeight: 2
-  walkSpeed: 3
-  runSpeed: 5
+  walkSpeed: 2
+  runSpeed: 3
   audioClipFire: {fileID: 8300000, guid: b33e2cff5225f4437a43a11d35763d46, type: 3}
   audioClipWeaponChange: {fileID: 8300000, guid: 9158afb6966d445db9caf1dccf7acbcc, type: 3}
   audioClipPickUp: {fileID: 8300000, guid: 9f1f37735305c4cc99b07c19fe48675d, type: 3}
   audioClipDamange: {fileID: 8300000, guid: f390d65ed5b9f4cb48199feda830b4c5, type: 3}
   audioReload: {fileID: 8300000, guid: 7f89d732b4b0f424b82acb1810b5899e, type: 3}
   audioFlashLightOn: {fileID: 8300000, guid: d6dcddd5ea003984ebec73c5d4db55d3, type: 3}
+  audioTakeDamage: {fileID: 8300000, guid: aeebefc729bcffc4a9bff469435c9b7b, type: 3}
   RifleAKobj: {fileID: 8170075547448970827}
   aimTarget: {fileID: 8346157313182236249}
   targetLayerMask:
@@ -22771,6 +22772,7 @@ MonoBehaviour:
   damageParticleSystem: {fileID: 19800002, guid: 3b1513bcb86426b4795879be6a128ed7, type: 3}
   bulletText: {fileID: 0}
   flashLightObj: {fileID: 5471529053728910844}
+  playerHpText: {fileID: 0}
 --- !u!95 &7594347049246206828
 Animator:
   serializedVersion: 7
