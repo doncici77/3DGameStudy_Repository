@@ -70,7 +70,7 @@ public class ZombieManager : MonoBehaviour
 
     void AttackSoundOn()
     {
-        SoundManager.Instance.PlaySFX("ZombieAttackSound");
+        SoundManager.Instance.PlaySFX("ZombieAttackSound", transform.position, true);
         Animation animation = GetComponent<Animation>();
     }
 
@@ -161,9 +161,6 @@ public class ZombieManager : MonoBehaviour
                 agent.isStopped = false;
                 agent.destination = targetPoint.position;
 
-                //transform.position += direction * currentMoveSpeed * Time.deltaTime;
-                //transform.LookAt(targetPoint.position);
-
                 if(agent.isOnOffMeshLink)
                 {
                     StartCoroutine(JumpAcrossLink());
@@ -195,7 +192,7 @@ public class ZombieManager : MonoBehaviour
         Debug.Log(gameObject.name + " : 추격중");
 
         animator.SetBool("isMove", true);
-        SoundManager.Instance.PlaySFX("ZombieChaseSound");
+        SoundManager.Instance.PlaySFX("ZombieChaseSound", transform.position, true);
 
         while (currentState == EZombieState.Chase)
         {
@@ -204,9 +201,6 @@ public class ZombieManager : MonoBehaviour
             agent.speed = moveSpeed;
             agent.isStopped = false;
             agent.destination = target.position;
-
-            //transform.position += direction * currentMoveSpeed * Time.deltaTime;
-            //transform.LookAt(target.position);
 
             // 상태 확인, 변경
             float distance = Vector3.Distance(transform.position, target.position);
@@ -227,7 +221,6 @@ public class ZombieManager : MonoBehaviour
     {
         // 공격 코드
         Debug.Log(gameObject.name + " : 공격!!!!");
-        //transform.LookAt(target.position);agent.speed = moveSpeed;
         agent.isStopped = true;
         agent.destination = PlayerManager.Instance.transform.position;
         animator.SetTrigger("isAttack");
@@ -298,13 +291,20 @@ public class ZombieManager : MonoBehaviour
         ChangeState(EZombieState.Stop);
         yield return StartCoroutine(Stop());  // Stop 코루틴이 끝날 때까지 기다림
 
-        if (distance > trackingRange)
+        if(!(currentState == EZombieState.Die))
         {
-            ChangeState(defaultState);
+            if (distance > trackingRange)
+            {
+                ChangeState(defaultState);
+            }
+            else
+            {
+                ChangeState(EZombieState.Chase);
+            }
         }
         else
         {
-            ChangeState(EZombieState.Chase);
+            ChangeState(EZombieState.Die);
         }
     }
 
@@ -316,14 +316,13 @@ public class ZombieManager : MonoBehaviour
 
     private IEnumerator Die()
     {
-        agent.isStopped = true;
         CapsuleCollider capsuleCollider = GetComponent<CapsuleCollider>();
         capsuleCollider.enabled = false;
         agent.enabled = false;
 
         Debug.Log(gameObject.name + " : 죽음");
         animator.SetTrigger("isDie");
-        SoundManager.Instance.PlaySFX("ZombieDieSound");
+        SoundManager.Instance.PlaySFX("ZombieDieSound", transform.position, true);
         yield return new WaitForSeconds(3.0f);
         gameObject.SetActive(false);
     }

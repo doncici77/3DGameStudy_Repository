@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SoundManager : MonoBehaviour
 {
@@ -46,6 +47,24 @@ public class SoundManager : MonoBehaviour
 
     private Coroutine currnetBGMCorutine;
 
+    /*private void Start()
+    {
+        string activeSceneName = SceneManager.GetActiveScene().name;
+        OnSceneLoaded(activeSceneName);
+    }
+
+    public void OnSceneLoaded(String sceneName)
+    {
+        if(sceneName == "LevelDeginScene")
+        {
+            PlayBGM("InGameBGM", 1.0f);
+        }
+        else if(sceneName == "GameScene2")
+        {
+            PlayBGM("GameScene2", 1.0f);
+        }
+    }*/
+
     /// <summary>
     /// 구조체로 가져온 정보들 딕셔너리에 저장하는 함수
     /// </summary>
@@ -68,20 +87,39 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    public void PlayBGM(string name)
+    public void PlayBGM(string name, float fadeDuration = 1.0f)
     {
-        if(bgmClipsDic.ContainsKey(name))
+        if (bgmClipsDic.ContainsKey(name))
         {
-            bgmSource.clip = bgmClipsDic[name];
-            bgmSource.Play();
+            Debug.Log("BGM재생준비 : " + name);
+            if (currnetBGMCorutine != null)
+            {
+                StopCoroutine(currnetBGMCorutine);
+            }
+
+            currnetBGMCorutine = StartCoroutine(FadeOutBGM(fadeDuration, () =>
+            {
+                bgmSource.spatialBlend = 0;
+                bgmSource.clip = bgmClipsDic[name]; // 현재 BGM을 변경
+                bgmSource.Play(); // 새로운 BGM 재생
+                Debug.Log("BGM재생");
+                currnetBGMCorutine = StartCoroutine(FadeInBGM(fadeDuration));
+            }));
         }
     }
 
-    public void PlaySFX(string name)
+    public void PlaySFX(string name, Vector3 position, bool is3D)
     {
         if (sfxClipsDic.ContainsKey(name))
         {
-            sfxSource.PlayOneShot(sfxClipsDic[name]);
+            if(!is3D)
+            {
+                sfxSource.PlayOneShot(sfxClipsDic[name]);
+            }
+            else
+            {
+                AudioSource.PlayClipAtPoint(sfxClipsDic[name], position); // 특정위치의 사운드를 실핼함
+            }
             Debug.Log("SFX 플레이 : " +  name);
         }
     }
@@ -110,6 +148,8 @@ public class SoundManager : MonoBehaviour
     {
         float startVolume = bgmSource.volume;
 
+        Debug.Log("bgmSource.volume : " + bgmSource.volume);
+
         for(float t = 0; t < duration; t += Time.deltaTime)
         {
             bgmSource.volume = Mathf.Lerp(startVolume, 0, t / duration);
@@ -127,10 +167,10 @@ public class SoundManager : MonoBehaviour
 
         for (float t = 0; t < duration; t += Time.deltaTime)
         {
-            bgmSource.volume = Mathf.Lerp(startVolume, 1, t / duration);
+            bgmSource.volume = Mathf.Lerp(startVolume, 0.5f, t / duration);
             yield return null;
         }
 
-        bgmSource.volume = 1;
+        bgmSource.volume = 0.5f;
     }
 }
