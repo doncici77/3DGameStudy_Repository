@@ -59,7 +59,6 @@ public class PlayerManager : MonoBehaviour
 
     public GameObject RifleAKobj;
     private int animationSpeed = 1;
-    string currentAnimation;
 
     private bool isCanMove = true;
 
@@ -103,7 +102,8 @@ public class PlayerManager : MonoBehaviour
     private bool isPaused = false;
 
     private Vector3 lastPosition;
-    private bool isSoundOn = false;
+    private Coroutine walkSoundCoroutine = null;
+    private Coroutine runSoundCoroutine = null;
 
     private void Awake()
     {
@@ -662,16 +662,18 @@ public class PlayerManager : MonoBehaviour
         // 현재 위치가 이전 위치와 다르면 소리 재생
         if (transform.position != lastPosition)
         {
-            if(!isSoundOn)
+            if (moveSpeed > 1 && moveSpeed <= 2)
             {
-                isSoundOn = true;
-                if (moveSpeed > 1 && moveSpeed <= 2)
+                if (walkSoundCoroutine == null)
                 {
-                    StartCoroutine(WalkSoundPlay());
+                    walkSoundCoroutine = StartCoroutine(WalkSoundPlay());
                 }
-                else if(moveSpeed > 2) 
+            }
+            else if (moveSpeed > 2)
+            {
+                if (runSoundCoroutine == null)
                 {
-                    StartCoroutine(RunSoundPlay());
+                    runSoundCoroutine = StartCoroutine(RunSoundPlay());
                 }
             }
         }
@@ -682,16 +684,22 @@ public class PlayerManager : MonoBehaviour
 
     IEnumerator WalkSoundPlay()
     {
-        SoundManager.Instance.PlaySFX("PlayerWalkSound" ,transform.position, false);
-        yield return new WaitForSeconds(0.4f);
-        isSoundOn = false;
+        while (moveSpeed > 1 && moveSpeed <= 2) // 조건을 만족하는 동안 반복
+        {
+            SoundManager.Instance.PlayWalkSound();
+            yield return new WaitForSeconds(0.4f);
+        }
+        walkSoundCoroutine = null;
     }
 
     IEnumerator RunSoundPlay()
     {
-        SoundManager.Instance.PlaySFX("PlayerWalkSound", transform.position, false);
-        yield return new WaitForSeconds(0.3f);
-        isSoundOn = false;
+        while (moveSpeed > 2) // 조건을 만족하는 동안 반복
+        {
+            SoundManager.Instance.PlayWalkSound();
+            yield return new WaitForSeconds(0.3f);
+        }
+        runSoundCoroutine = null;
     }
 
     /*// 걷는 사운드 예시

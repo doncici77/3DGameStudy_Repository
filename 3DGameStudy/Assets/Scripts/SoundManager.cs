@@ -31,6 +31,7 @@ public class SoundManager : MonoBehaviour
 
     public AudioSource bgmSource; // 배경음
     public AudioSource sfxSource; // 효과음
+    public AudioSource walkSoundSource;
 
     private Dictionary<string, AudioClip> bgmClipsDic = new Dictionary<string, AudioClip>();
     private Dictionary<string, AudioClip> sfxClipsDic = new Dictionary<string, AudioClip>();
@@ -44,6 +45,7 @@ public class SoundManager : MonoBehaviour
 
     public NamedAudioClip[] bgmClipList;
     public NamedAudioClip[] sfxClipList;
+    public AudioClip walkSoundClip;
 
     private Coroutine currnetBGMCorutine;
 
@@ -122,6 +124,11 @@ public class SoundManager : MonoBehaviour
             }
             Debug.Log("SFX 플레이 : " +  name);
         }
+    }
+
+    public void PlayWalkSound()
+    {
+        walkSoundSource.PlayOneShot(walkSoundClip);
     }
 
     public void StopBGM()
