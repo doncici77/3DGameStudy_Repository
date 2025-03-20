@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Android;
 using UnityEngine.Animations.Rigging;
+using UnityEngine.Audio;
 using UnityEngine.InputSystem.Processors;
 using UnityEngine.UI; // NameSpace : 소속
 
@@ -101,6 +102,11 @@ public class PlayerManager : MonoBehaviour
     public GameObject PauseObj;
     private bool isPaused = false;
 
+    AudioSource audioSource;
+    private Vector3 lastPosition;
+    public AudioClip walkSound;
+    private bool isSoundOn = false;
+
     private void Awake()
     {
         if(Instance == null)
@@ -134,6 +140,7 @@ public class PlayerManager : MonoBehaviour
         flashLightObj.SetActive(false);
         PauseObj.SetActive(false);
 
+        audioSource = GetComponent<AudioSource>();
         SoundManager.Instance.StopBGM();
         SoundManager.Instance.SetBGMVolume(0.7f);
         SoundManager.Instance.PlayBGM("InGameBGMSound");
@@ -174,6 +181,8 @@ public class PlayerManager : MonoBehaviour
                     ReGame();
                 }
             }
+
+            WalkSound(); // 발소리 재생 함수
 
             Fire(); // 총 발사 함수
 
@@ -267,7 +276,7 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    void PlayPickUp()
+    public void PlayPickUp()
     {
         Vector3 origin = itemGetPos.position;
         Vector3 direction = itemGetPos.forward;
@@ -650,6 +659,43 @@ public class PlayerManager : MonoBehaviour
     {
         SoundManager.Instance.PlaySFX("FireSound");
         rifleEffect.Play();
+    }
+
+    public void WalkSound()
+    {
+        // 현재 위치가 이전 위치와 다르면 소리 재생
+        if (transform.position != lastPosition)
+        {
+            if(!isSoundOn)
+            {
+                isSoundOn = true;
+                if (moveSpeed > 1 && moveSpeed <= 2)
+                {
+                    StartCoroutine(WalkSoundPlay());
+                }
+                else if(moveSpeed > 2) 
+                {
+                    StartCoroutine(RunSoundPlay());
+                }
+            }
+        }
+
+        // 현재 위치를 다음 프레임에서 비교할 수 있도록 저장
+        lastPosition = transform.position;
+    }
+
+    IEnumerator WalkSoundPlay()
+    {
+        audioSource.PlayOneShot(walkSound);
+        yield return new WaitForSeconds(0.4f);
+        isSoundOn = false;
+    }
+
+    IEnumerator RunSoundPlay()
+    {
+        audioSource.PlayOneShot(walkSound);
+        yield return new WaitForSeconds(0.3f);
+        isSoundOn = false;
     }
 
     /*// 걷는 사운드 예시

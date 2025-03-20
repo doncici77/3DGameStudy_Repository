@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -41,6 +43,8 @@ public class SoundManager : MonoBehaviour
 
     public NamedAudioClip[] bgmClipList;
     public NamedAudioClip[] sfxClipList;
+
+    private Coroutine currnetBGMCorutine;
 
     /// <summary>
     /// 구조체로 가져온 정보들 딕셔너리에 저장하는 함수
@@ -100,5 +104,33 @@ public class SoundManager : MonoBehaviour
     public void SetSFXVolume(float volume)
     {
         sfxSource.volume = Mathf.Clamp(volume, 0, 1);
+    }
+
+    private IEnumerator FadeOutBGM(float duration, Action onFadeComplete)
+    {
+        float startVolume = bgmSource.volume;
+
+        for(float t = 0; t < duration; t += Time.deltaTime)
+        {
+            bgmSource.volume = Mathf.Lerp(startVolume, 0, t / duration);
+            yield return null;
+        }
+
+        bgmSource.volume = 0;
+        onFadeComplete?.Invoke(); // 페이드 아웃이 완료되면 다음 작업 실행
+    }
+
+    private IEnumerator FadeInBGM(float duration)
+    {
+        float startVolume = 0;
+        bgmSource.volume = 0;
+
+        for (float t = 0; t < duration; t += Time.deltaTime)
+        {
+            bgmSource.volume = Mathf.Lerp(startVolume, 1, t / duration);
+            yield return null;
+        }
+
+        bgmSource.volume = 1;
     }
 }
