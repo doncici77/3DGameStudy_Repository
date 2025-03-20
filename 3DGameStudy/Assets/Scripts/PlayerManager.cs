@@ -133,7 +133,9 @@ public class PlayerManager : MonoBehaviour
         bulletText.gameObject.SetActive(false);
         flashLightObj.SetActive(false);
         PauseObj.SetActive(false);
+
         SoundManager.Instance.StopBGM();
+        SoundManager.Instance.SetBGMVolume(0.7f);
         SoundManager.Instance.PlayBGM("InGameBGMSound");
     }
 

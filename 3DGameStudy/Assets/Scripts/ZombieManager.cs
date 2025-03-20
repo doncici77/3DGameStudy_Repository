@@ -319,6 +319,7 @@ public class ZombieManager : MonoBehaviour
         agent.isStopped = true;
         CapsuleCollider capsuleCollider = GetComponent<CapsuleCollider>();
         capsuleCollider.enabled = false;
+        agent.enabled = false;
 
         Debug.Log(gameObject.name + " : Á×À½");
         animator.SetTrigger("isDie");

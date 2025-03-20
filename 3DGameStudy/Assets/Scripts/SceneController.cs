@@ -29,6 +29,7 @@ public class SceneController : MonoBehaviour
     private void Start()
     {
         SoundManager.Instance.StopBGM();
+        SoundManager.Instance.SetBGMVolume(0.7f);
         SoundManager.Instance.PlayBGM("MenuBGMSound");
     }
 
