@@ -105,6 +105,8 @@ public class PlayerManager : MonoBehaviour
     private Coroutine walkSoundCoroutine = null;
     private Coroutine runSoundCoroutine = null;
 
+    private float currentMoveSpeed;
+
     private void Awake()
     {
         if(Instance == null)
@@ -354,6 +356,22 @@ public class PlayerManager : MonoBehaviour
         {
             moveSpeed = isRunnig ? runSpeed : walkSpeed;
         }
+
+        if (horizontal != 0 || vertical != 0)
+        {
+            if (moveSpeed == 2)
+            {
+                currentMoveSpeed = 2;
+            }
+            else if (moveSpeed == 3)
+            {
+                currentMoveSpeed = 3;
+            }
+        }
+        else
+        {
+            currentMoveSpeed = 0;
+        }
     }
 
     /// <summary>
@@ -414,7 +432,7 @@ public class PlayerManager : MonoBehaviour
 
         Vector3 move = transform.right * horizontal + transform.forward * vertical;
         characterController.Move(move.normalized * moveSpeed * Time.deltaTime);
-
+        
         UpdateCameraPosition();
     }
 
@@ -662,14 +680,14 @@ public class PlayerManager : MonoBehaviour
         // 현재 위치가 이전 위치와 다르면 소리 재생
         if (transform.position != lastPosition)
         {
-            if (moveSpeed > 1 && moveSpeed <= 2)
+            if (currentMoveSpeed == 2)
             {
                 if (walkSoundCoroutine == null)
                 {
                     walkSoundCoroutine = StartCoroutine(WalkSoundPlay());
                 }
             }
-            else if (moveSpeed > 2)
+            else if (moveSpeed == 3)
             {
                 if (runSoundCoroutine == null)
                 {
@@ -684,8 +702,9 @@ public class PlayerManager : MonoBehaviour
 
     IEnumerator WalkSoundPlay()
     {
-        while (moveSpeed > 1 && moveSpeed <= 2) // 조건을 만족하는 동안 반복
+        while (currentMoveSpeed == 2) // 조건을 만족하는 동안 반복
         {
+            Debug.Log("moveSpeed : " + moveSpeed);
             SoundManager.Instance.PlayWalkSound();
             yield return new WaitForSeconds(0.4f);
         }
@@ -694,7 +713,7 @@ public class PlayerManager : MonoBehaviour
 
     IEnumerator RunSoundPlay()
     {
-        while (moveSpeed > 2) // 조건을 만족하는 동안 반복
+        while (currentMoveSpeed == 3) // 조건을 만족하는 동안 반복
         {
             SoundManager.Instance.PlayWalkSound();
             yield return new WaitForSeconds(0.3f);
