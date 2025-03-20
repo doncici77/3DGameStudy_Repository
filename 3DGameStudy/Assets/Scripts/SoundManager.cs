@@ -28,8 +28,8 @@ public class SoundManager : MonoBehaviour
     public AudioSource bgmSource; // 배경음
     public AudioSource sfxSource; // 효과음
 
-    private Dictionary<string, AudioClip> bgmClips = new Dictionary<string, AudioClip>();
-    private Dictionary<string, AudioClip> sfxClips = new Dictionary<string, AudioClip>();
+    private Dictionary<string, AudioClip> bgmClipsDic = new Dictionary<string, AudioClip>();
+    private Dictionary<string, AudioClip> sfxClipsDic = new Dictionary<string, AudioClip>();
 
     [System.Serializable]
     public struct NamedAudioClip
@@ -41,13 +41,24 @@ public class SoundManager : MonoBehaviour
     public NamedAudioClip[] bgmClipList;
     public NamedAudioClip[] sfxClipList;
 
-    void Start()
+    /// <summary>
+    /// 구조체로 가져온 정보들 딕셔너리에 저장하는 함수
+    /// </summary>
+    void InitializeAudioClips()
     {
-        
-    }
-
-    void Update()
-    {
-        
+        foreach(var bgm in bgmClipList)
+        {
+            if(!bgmClipsDic.ContainsKey(bgm.name))
+            {
+                bgmClipsDic.Add(bgm.name, bgm.clip);
+            }
+        }
+        foreach (var sfx in sfxClipList)
+        {
+            if (!sfxClipsDic.ContainsKey(sfx.name))
+            {
+                sfxClipsDic.Add(sfx.name, sfx.clip);
+            }
+        }
     }
 }
