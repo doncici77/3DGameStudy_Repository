@@ -19,7 +19,6 @@ public class ZombieManager : MonoBehaviour
 {
     private EZombieState currentState;
     public EZombieState defaultState = EZombieState.Idle;
-    public Transform target;
     public float attackRange = 1.0f; // 공격 범위
     public float attackDelay = 2.0f; // 공격 딜레이
     private float nextAttackTime = 0.0f; // 다음 공격 시간관리
@@ -68,9 +67,9 @@ public class ZombieManager : MonoBehaviour
 
     void Update()
     {
-        if(target != null)
+        if(PlayerManager.Instance.transform.position != null)
         {
-            distanceTotarget = Vector3.Distance(transform.position, target.position);
+            distanceTotarget = Vector3.Distance(transform.position, PlayerManager.Instance.transform.position);
         }
     }
 
@@ -102,7 +101,7 @@ public class ZombieManager : MonoBehaviour
                 break;
 
             case EZombieState.Chase:
-                stateRoutine = StartCoroutine(Chase(target));
+                stateRoutine = StartCoroutine(Chase(PlayerManager.Instance.transform));
                 break;
 
             case EZombieState.Attack:
@@ -135,7 +134,7 @@ public class ZombieManager : MonoBehaviour
         while (currentState == EZombieState.Idle)
         {
             // 상태 확인, 변경
-            float distance = Vector3.Distance(transform.position, target.position);
+            float distance = Vector3.Distance(transform.position, PlayerManager.Instance.transform.position);
 
             if (distance < attackRange)
             {
@@ -181,7 +180,7 @@ public class ZombieManager : MonoBehaviour
                 }
 
                 // 상태 확인, 변경
-                float distance = Vector3.Distance(transform.position, target.position);
+                float distance = Vector3.Distance(transform.position, PlayerManager.Instance.transform.position);
                 if (distance < attackRange)
                 {
                     ChangeState(EZombieState.Attack);
@@ -235,13 +234,13 @@ public class ZombieManager : MonoBehaviour
         Debug.Log(gameObject.name + " : 공격!!!!");
         //transform.LookAt(target.position);agent.speed = moveSpeed;
         agent.isStopped = true;
-        agent.destination = target.position;
+        agent.destination = PlayerManager.Instance.transform.position;
         animator.SetTrigger("isAttack");
 
         yield return new WaitForSeconds(attackDelay); // 공격후 딜레이 방생
 
         // 상태 확인, 변경
-        float distance = Vector3.Distance(transform.position, target.position);
+        float distance = Vector3.Distance(transform.position, PlayerManager.Instance.transform.position);
 
         if(distance > trackingRange)
         {
@@ -261,7 +260,7 @@ public class ZombieManager : MonoBehaviour
     {
         Debug.Log(gameObject.name + " : 도망중");
 
-        Vector3 evadeDirection = (transform.position - target.position).normalized; // 플레이어의 반대 방향
+        Vector3 evadeDirection = (transform.position - PlayerManager.Instance.transform.position).normalized; // 플레이어의 반대 방향
         animator.SetBool("isMove", false);
         float evadeTime = 3.0f;
         float timer = 0.0f;
@@ -286,7 +285,7 @@ public class ZombieManager : MonoBehaviour
         zombieHp -= damage;
 
         // 상태 확인, 변경
-        float distance = Vector3.Distance(transform.position, target.position);
+        float distance = Vector3.Distance(transform.position, PlayerManager.Instance.transform.position);
 
         if (zombieHp <= 0)
         {
