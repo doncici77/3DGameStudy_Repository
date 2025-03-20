@@ -100,6 +100,8 @@ public class PlayerManager : MonoBehaviour
     private bool isDead = false;
 
     public Text playerHpText;
+    public GameObject PauseObj;
+    private bool isPaused = false;
 
     void Start()
     {
@@ -118,6 +120,7 @@ public class PlayerManager : MonoBehaviour
         playerHpText.text = $"HP:{playerHp}";
         bulletText.gameObject.SetActive(false);
         flashLightObj.SetActive(false);
+        PauseObj.SetActive(false);
     }
 
     void Update()
@@ -142,6 +145,20 @@ public class PlayerManager : MonoBehaviour
                 Reload(); // 재장전 함수
             }
 
+            if(Input.GetKeyUp(KeyCode.Escape))
+            {
+                isPaused = !isPaused;
+
+                if(isPaused)
+                {
+                    Pause();
+                }
+                else
+                {
+                    ReGame();
+                }
+            }
+
             Fire(); // 총 발사 함수
 
             SetAnimator(); // 에니메이션 세팅
@@ -160,6 +177,37 @@ public class PlayerManager : MonoBehaviour
                 ActionFlashLight();
             }
         }
+    }
+
+    public void ReGame()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        audioSource.PlayOneShot(audioClipFire);
+        PauseObj.SetActive(false);
+        Time.timeScale = 1.0f; // 게임 시간 재게
+    }
+
+    void Pause()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        PauseObj.SetActive(true);
+        Time.timeScale = 0; // 게임시간 정지
+    }
+
+    public void Restart()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        audioSource.PlayOneShot(audioClipFire);
+        PauseObj.SetActive(false);
+        Time.timeScale = 1.0f;
+    }
+
+    public void Exit()
+    {
+        audioSource.PlayOneShot(audioClipFire);
+        PauseObj.SetActive(false);
+        Time.timeScale = 1.0f;
+        Application.Quit();
     }
 
     void UpdateAimTarget()
