@@ -10,6 +10,7 @@ public enum EZombieState
     Attack, // 공격
     Evade, // 도망
     Idle, // 서있는 상태
+    Stop, // 멈춤상태
     Die // 죽음
 }
 
@@ -97,6 +98,10 @@ public class ZombieManager : MonoBehaviour
 
             case EZombieState.Evade:
                 stateRoutine = StartCoroutine(Evade());
+                break;
+
+            case EZombieState.Stop:
+                stateRoutine = StartCoroutine(Stop());
                 break;
 
             case EZombieState.Die:
@@ -272,15 +277,29 @@ public class ZombieManager : MonoBehaviour
         else
         {
             animator.SetTrigger("isTakeDamage");
-            if(distance > trackingRange)
-            {
-                ChangeState(defaultState);
-            }
-            else
-            {
-                ChangeState(EZombieState.Chase);
-            }
+            StartCoroutine(TakeDamageSequence(distance));
         }
+    }
+
+    private IEnumerator TakeDamageSequence(float distance)
+    {
+        ChangeState(EZombieState.Stop);
+        yield return StartCoroutine(Stop());  // Stop 코루틴이 끝날 때까지 기다림
+
+        if (distance > trackingRange)
+        {
+            ChangeState(defaultState);
+        }
+        else
+        {
+            ChangeState(EZombieState.Chase);
+        }
+    }
+
+    private IEnumerator Stop()
+    {
+        agent.isStopped = true;
+        yield return new WaitForSeconds(1.0f);
     }
 
     private IEnumerator Die()
