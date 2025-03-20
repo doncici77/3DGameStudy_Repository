@@ -1088,7 +1088,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: ZOMBIE ATTACK
+  m_Text: LEFT  1  DEAD
 --- !u!222 &1415869623
 CanvasRenderer:
   m_ObjectHideFlags: 0

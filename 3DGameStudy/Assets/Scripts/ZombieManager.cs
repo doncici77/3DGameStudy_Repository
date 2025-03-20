@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.AI.Navigation;
 using UnityEditor.Build.Content;
 using UnityEngine;
 using UnityEngine.AI;
@@ -41,17 +42,28 @@ public class ZombieManager : MonoBehaviour
     private AudioSource audioSource;
 
     private NavMeshAgent agent;
-    private bool isTakingDamage = false;
+
+    private bool isJumping = false;
+    private Rigidbody rb;
+    public float jumpHeight = 2.0f;
+    public float jumpDuration = 1.0f;
+    private NavMeshLink[] navMeshLinks;
 
     void Start()
     {
         animator = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
-
         agent = GetComponent<NavMeshAgent>();
-
         currentState = defaultState;
         ChangeState(currentState); // 상태 초기화
+        rb = GetComponent<Rigidbody>();
+        if(rb == null)
+        {
+            rb = gameObject.AddComponent<Rigidbody>();
+        }
+        rb.isKinematic = true;
+
+        navMeshLinks = FindObjectsOfType<NavMeshLink>();
     }
 
     void Update()
@@ -60,7 +72,6 @@ public class ZombieManager : MonoBehaviour
         {
             distanceTotarget = Vector3.Distance(transform.position, target.position);
         }
-
     }
 
     void AttackSoundOn()
@@ -71,7 +82,9 @@ public class ZombieManager : MonoBehaviour
 
     public void ChangeState(EZombieState newState)
     {
-        if(stateRoutine != null) // 현재 상태 종료, 저장 되어있는 코루틴 종료
+        if (isJumping) return;
+
+        if (stateRoutine != null) // 현재 상태 종료, 저장 되어있는 코루틴 종료
         {
             StopCoroutine(stateRoutine);
         }
@@ -156,6 +169,11 @@ public class ZombieManager : MonoBehaviour
 
                 //transform.position += direction * currentMoveSpeed * Time.deltaTime;
                 //transform.LookAt(targetPoint.position);
+
+                if(agent.isOnOffMeshLink)
+                {
+                    StartCoroutine(JumpAcrossLink());
+                }
 
                 if (Vector3.Distance(transform.position, targetPoint.position) < 0.3)
                 {
@@ -313,5 +331,41 @@ public class ZombieManager : MonoBehaviour
         audioSource.PlayOneShot(zombieDieSound);
         yield return new WaitForSeconds(3.0f);
         gameObject.SetActive(false);
+    }
+
+    private IEnumerator JumpAcrossLink()
+    {
+        Debug.Log(gameObject.name + " 좀비 점프");
+
+        isJumping = true;
+
+        // NavMeshAgent의 이동을 멈춤.
+        agent.isStopped = true;
+
+        // 좀비가 점프해야 하는 시작 위치(startPos)와 끝 위치(endPos)를 가져옴.
+        OffMeshLinkData linkData = agent.currentOffMeshLinkData;
+        Vector3 startPos = linkData.startPos;
+        Vector3 endPos = linkData.endPos;
+
+        // 점프 경로 계산 (포물선을 그리며 점프)
+        float elsapsedTime = 0;
+        while(elsapsedTime < jumpDuration)
+        {
+            float t = elsapsedTime / jumpDuration;
+            Vector3 currentPosition = Vector3.Lerp(startPos, endPos, t);
+            currentPosition.y += Mathf.Sin(t * Mathf.PI) * jumpHeight; // 포물선 경로
+            transform.position = currentPosition;
+
+            elsapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        //도착점의 위치
+        transform.position = endPos;
+
+        //NavMeshAgent 경로 재개
+        agent.CompleteOffMeshLink();
+        agent.isStopped = false;
+        isJumping = false;
     }
 }
