@@ -56,14 +56,6 @@ public class PlayerManager : MonoBehaviour
     private bool isAim = false;
     private bool isFire = false;
 
-    public AudioClip audioClipFire;
-    private AudioSource audioSource;
-    public AudioClip audioClipWeaponChange;
-    public AudioClip audioClipPickUp;
-    public AudioClip audioClipDamange;
-    public AudioClip audioReload;
-    public AudioClip audioFlashLightOn;
-    public AudioClip audioTakeDamage;
     public GameObject RifleAKobj;
     private int animationSpeed = 1;
     string currentAnimation;
@@ -133,7 +125,6 @@ public class PlayerManager : MonoBehaviour
         mainCamera = cameraTransform.GetComponent<Camera>();
         mainCamera.fieldOfView = defaultFov;
         animator = GetComponent<Animator>();
-        audioSource = GetComponent<AudioSource>();
         RifleAKobj.SetActive(false);
         crosshairObj.SetActive(false);
         itemIcon.SetActive(false);
@@ -142,6 +133,8 @@ public class PlayerManager : MonoBehaviour
         bulletText.gameObject.SetActive(false);
         flashLightObj.SetActive(false);
         PauseObj.SetActive(false);
+        SoundManager.Instance.StopBGM();
+        SoundManager.Instance.PlayBGM("InGameBGMSound");
     }
 
     void Update()
@@ -203,7 +196,7 @@ public class PlayerManager : MonoBehaviour
     public void ReGame()
     {
         Cursor.lockState = CursorLockMode.Locked;
-        audioSource.PlayOneShot(audioClipFire);
+        SoundManager.Instance.PlaySFX("MenuButtonClick");
         PauseObj.SetActive(false);
         Time.timeScale = 1.0f; // 게임 시간 재게
     }
@@ -218,14 +211,14 @@ public class PlayerManager : MonoBehaviour
     public void Restart()
     {
         Cursor.lockState = CursorLockMode.Locked;
-        audioSource.PlayOneShot(audioClipFire);
+        SoundManager.Instance.PlaySFX("MenuButtonClick");
         PauseObj.SetActive(false);
         Time.timeScale = 1.0f;
     }
 
     public void Exit()
     {
-        audioSource.PlayOneShot(audioClipFire);
+        SoundManager.Instance.PlaySFX("MenuButtonClick");
         PauseObj.SetActive(false);
         Time.timeScale = 1.0f;
         Application.Quit();
@@ -284,7 +277,7 @@ public class PlayerManager : MonoBehaviour
         {
             hit.collider.gameObject.SetActive(false);
             Debug.Log("Item : " + hit.collider.name);
-            audioSource.PlayOneShot(audioClipPickUp);
+            SoundManager.Instance.PlaySFX("PickUpSound");
 
             if (hit.collider.name == "Rifle")
             {
@@ -308,7 +301,7 @@ public class PlayerManager : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.R))
         {
             animator.SetTrigger("Reload");
-            audioSource.PlayOneShot(audioReload);
+            SoundManager.Instance.PlaySFX("ReloadSound");
 
             savebulletCount = savebulletCount - (30 - firebulletCount);
             firebulletCount = 30;
@@ -318,7 +311,7 @@ public class PlayerManager : MonoBehaviour
 
     void ActionFlashLight()
     {
-        audioSource.PlayOneShot(audioFlashLightOn);
+        SoundManager.Instance.PlaySFX("FlashLightOnSound");
         isFlashLightOn = !isFlashLightOn;
         flashLightObj.SetActive(isFlashLightOn);
     }
@@ -598,7 +591,7 @@ public class PlayerManager : MonoBehaviour
 
                                 ParticleSystem particle = Instantiate(damageParticleSystem, hits[i].point, Quaternion.identity);
                                 particle.Play();
-                                audioSource.PlayOneShot(audioClipDamange);
+                                SoundManager.Instance.PlaySFX("ZombieTakeDamageSound");
                             }
                         }
                         else
@@ -609,7 +602,7 @@ public class PlayerManager : MonoBehaviour
 
                             ParticleSystem particle = Instantiate(damageParticleSystem, hits[0].point, Quaternion.identity);
                             particle.Play();
-                            audioSource.PlayOneShot(audioClipDamange);
+                            SoundManager.Instance.PlaySFX("ZombieTakeDamageSound");
                         }
                     }
                     else
@@ -648,12 +641,12 @@ public class PlayerManager : MonoBehaviour
 
     public void WeaponChangeSoundOn()
     {
-        audioSource.PlayOneShot(audioClipWeaponChange);
+        SoundManager.Instance.PlaySFX("WeaponChangeSound");
     }
 
     public void FireSoundOn()   
     {
-        audioSource.PlayOneShot(audioClipFire);
+        SoundManager.Instance.PlaySFX("FireSound");
         rifleEffect.Play();
     }
 
@@ -683,7 +676,7 @@ public class PlayerManager : MonoBehaviour
             {
                 Debug.Log("PlayerDamage" + other.gameObject.tag);
                 animator.SetTrigger("Damage");
-                audioSource.PlayOneShot(audioTakeDamage);
+                SoundManager.Instance.PlaySFX("PlayerTakeDamageSound");
                 playerHp -= 30;
 
                 if (playerHp < 0)
@@ -714,12 +707,6 @@ public class PlayerManager : MonoBehaviour
         isTakingDamage = true;
         yield return new WaitForSeconds(1.0f); // 1초 동안 중복 방지
         isTakingDamage = false;
-    }
-
-    public void TakePlayerDamageOn()
-    {
-        audioSource.PlayOneShot(audioClipFire);
-        playerHp -= 30;
     }
 
     /// <summary>

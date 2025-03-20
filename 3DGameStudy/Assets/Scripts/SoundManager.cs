@@ -15,6 +15,7 @@ public class SoundManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            InitializeAudioClips();
         }
         else
         {
@@ -53,6 +54,7 @@ public class SoundManager : MonoBehaviour
                 bgmClipsDic.Add(bgm.name, bgm.clip);
             }
         }
+
         foreach (var sfx in sfxClipList)
         {
             if (!sfxClipsDic.ContainsKey(sfx.name))
@@ -60,5 +62,43 @@ public class SoundManager : MonoBehaviour
                 sfxClipsDic.Add(sfx.name, sfx.clip);
             }
         }
+    }
+
+    public void PlayBGM(string name)
+    {
+        if(bgmClipsDic.ContainsKey(name))
+        {
+            bgmSource.clip = bgmClipsDic[name];
+            bgmSource.Play();
+        }
+    }
+
+    public void PlaySFX(string name)
+    {
+        if (sfxClipsDic.ContainsKey(name))
+        {
+            sfxSource.PlayOneShot(sfxClipsDic[name]);
+            Debug.Log("SFX «√∑π¿Ã : " +  name);
+        }
+    }
+
+    public void StopBGM()
+    {
+        bgmSource.Stop();
+    }
+
+    public void StopSFX()
+    {
+        sfxSource.Stop();
+    }
+
+    public void SetBGMVolume(float volume)
+    {
+        bgmSource.volume = Mathf.Clamp(volume, 0, 1);
+    }
+
+    public void SetSFXVolume(float volume)
+    {
+        sfxSource.volume = Mathf.Clamp(volume, 0, 1);
     }
 }

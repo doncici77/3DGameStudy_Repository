@@ -26,8 +26,23 @@ public class SceneController : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        SoundManager.Instance.StopBGM();
+        SoundManager.Instance.PlayBGM("MenuBGMSound");
+    }
+
     public void LoadScene(string sceneName)
     {
+        SoundManager.Instance.SetSFXVolume(1f);
+        SoundManager.Instance.PlaySFX("MenuButtonClick");
+
+        StartCoroutine(DelayLoadScene(sceneName));
+    }
+
+    IEnumerator DelayLoadScene(string sceneName)
+    {
+        yield return new WaitForSeconds(1.0f);
         SceneManager.LoadScene(sceneName);
 
         Debug.Log("Scene º¯°æ : " + sceneName);
@@ -35,6 +50,8 @@ public class SceneController : MonoBehaviour
 
     public void ExitScene()
     {
+        SoundManager.Instance.SetSFXVolume(1f);
+        SoundManager.Instance.PlaySFX("MenuButtonClick");
         Application.Quit();
     }
 }

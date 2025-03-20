@@ -35,10 +35,6 @@ public class ZombieManager : MonoBehaviour
     private Coroutine stateRoutine; // 코루틴의 진행상태를 저장하는 변수
 
     private Animator animator;
-    public AudioClip zombieAttackSound;
-    public AudioClip zombieChaseSound;
-    public AudioClip zombieDieSound;
-    private AudioSource audioSource;
 
     private NavMeshAgent agent;
 
@@ -51,7 +47,6 @@ public class ZombieManager : MonoBehaviour
     void Start()
     {
         animator = GetComponent<Animator>();
-        audioSource = GetComponent<AudioSource>();
         agent = GetComponent<NavMeshAgent>();
         currentState = defaultState;
         ChangeState(currentState); // 상태 초기화
@@ -75,7 +70,7 @@ public class ZombieManager : MonoBehaviour
 
     void AttackSoundOn()
     {
-        audioSource.PlayOneShot(zombieAttackSound);
+        SoundManager.Instance.PlaySFX("ZombieAttackSound");
         Animation animation = GetComponent<Animation>();
     }
 
@@ -200,7 +195,7 @@ public class ZombieManager : MonoBehaviour
         Debug.Log(gameObject.name + " : 추격중");
 
         animator.SetBool("isMove", true);
-        audioSource.PlayOneShot(zombieChaseSound);
+        SoundManager.Instance.PlaySFX("ZombieChaseSound");
 
         while (currentState == EZombieState.Chase)
         {
@@ -327,7 +322,7 @@ public class ZombieManager : MonoBehaviour
 
         Debug.Log(gameObject.name + " : 죽음");
         animator.SetTrigger("isDie");
-        audioSource.PlayOneShot(zombieDieSound);
+        SoundManager.Instance.PlaySFX("ZombieDieSound");
         yield return new WaitForSeconds(3.0f);
         gameObject.SetActive(false);
     }
