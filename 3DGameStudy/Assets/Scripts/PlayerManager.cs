@@ -9,6 +9,12 @@ using UnityEngine.UI; // NameSpace : 소속
 
 public class PlayerManager : MonoBehaviour
 {
+    public static PlayerManager Instance
+    {
+        get; 
+        private set; // 외부에서 값변경 불가능하게 private 사용
+    }
+
     private float moveSpeed = 5.0f; // 플레이어 이동 속도
     public float mouseSensitivity = 100.0f; // 마우스 감도
     public Transform cameraTransform; // 카메라의 Transform
@@ -102,6 +108,21 @@ public class PlayerManager : MonoBehaviour
     public Text playerHpText;
     public GameObject PauseObj;
     private bool isPaused = false;
+
+    private void Awake()
+    {
+        if(Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            if(Instance != this)
+            {
+                Destroy(gameObject);
+            }
+        }
+    }
 
     void Start()
     {
