@@ -8,6 +8,7 @@ TagManager:
   - FxTemporaire
   - CinemachineTarget
   - PlayerDamage
+  - Door
   layers:
   - Default
   - TransparentFX

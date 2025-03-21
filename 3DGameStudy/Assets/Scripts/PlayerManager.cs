@@ -127,6 +127,10 @@ public class PlayerManager : MonoBehaviour
     private Vector3 originalCameraPosition;
     private Coroutine cameraShakeCoroutine;
 
+    private bool canOpen = false;
+    private GameObject doorObj;
+    private bool openingDoor = false;
+
     private void Awake()
     {
         if(Instance == null)
@@ -204,6 +208,8 @@ public class PlayerManager : MonoBehaviour
 
             Fire(); // 총 발사 함수
 
+            OpenDoor(); // 문 관련 함수
+
             SetAnimator(); // 에니메이션 세팅
 
             SetMove(); // 움직임 상태 세팅
@@ -228,6 +234,45 @@ public class PlayerManager : MonoBehaviour
                 Quaternion recoilRotation = Quaternion.Euler(-currentRecoil, 0, 0);
                 Camera.main.transform.rotation = currentRotation * recoilRotation; // 카메라를 제어하는 코드를 꺼야 한다
             }
+        }
+    }
+
+    void OpenDoor()
+    {
+        if(Input.GetKeyDown(KeyCode.G) && canOpen)
+        {
+            Debug.Log("문열기 가능");
+
+            GameObject openDoorChildObj = doorObj.transform.GetChild(0).gameObject;
+
+
+            if(doorObj.transform.position.x < transform.position.x)
+            {
+                if(!openingDoor)
+                {
+                    openDoorChildObj.transform.Rotate(0, 0, -90);
+                    openingDoor = true;
+                }
+                else
+                {
+                    openDoorChildObj.transform.rotation = Quaternion.Euler(new Vector3(-90, 0, 0));
+                    openingDoor = false;
+                }
+            }
+            else if(doorObj.transform.position.x > transform.position.x)
+            {
+                if (!openingDoor)
+                {
+                    openDoorChildObj.transform.Rotate(0, 0, 90);
+                    openingDoor = true;
+                }
+                else
+                {
+                    openDoorChildObj.transform.rotation = Quaternion.Euler(new Vector3(-90, 0, 0));
+                    openingDoor = false;
+                }
+            }
+
         }
     }
 
@@ -870,12 +915,23 @@ public class PlayerManager : MonoBehaviour
                 playerHpText.text = $"HP:{playerHp}";
                 StartCoroutine(DelayTakeDamage()); // 일정 시간 후 다시 가능하도록
             }
-            /*else if(other.CompareTag("Item"))
-            {
-                //other.gameObject.transform.SetParent(); // 오브젝트가 SetParent()의 위치를 부모로하는 위치로 이동한다.
 
-                //other.gameObject.transform.SetParent(null); //null을 하면 월드 포지션으로 이동한다.
-            }*/
+            if(other.gameObject.tag =="Door")
+            {
+                canOpen = true;
+                doorObj = other.gameObject;
+            }
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.tag == "Door")
+        {
+            canOpen = false;
+            doorObj = other.gameObject;
+            GameObject openDoorChildObj = doorObj.transform.GetChild(0).gameObject;
+            openDoorChildObj.transform.rotation = Quaternion.Euler(new Vector3(-90, 0, 0));
         }
     }
 
