@@ -11487,7 +11487,7 @@ Transform:
   m_GameObject: {fileID: 697841861}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1021.0846, y: 540.7128, z: 173.57141}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -33165,7 +33165,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponExplosionParticle: {fileID: 100002, guid: 3b1513bcb86426b4795879be6a128ed7, type: 3}
-  weaponSmokeParticle: {fileID: 0}
+  weaponSmokeParticle: {fileID: 100000, guid: 4ecfa3d3919108f4fbff80d1c4d920a1, type: 3}
   weaponFireParticle: {fileID: 1310685047}
   poolSize: 30
 --- !u!4 &2133095851
@@ -33177,7 +33177,7 @@ Transform:
   m_GameObject: {fileID: 2133095849}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1021.0846, y: 540.7128, z: 173.57141}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

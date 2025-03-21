@@ -684,8 +684,11 @@ public class PlayerManager : MonoBehaviour
                 }
                 else if(currentWeaponMode == WeaponMode.Rifle)
                 {
-
+                    recoilStrength = 0.2f;
+                    maxRecoilAngle = 1f;
                 }
+
+                Debug.Log("recoilStrength : " + recoilStrength);
 
                 if(firebulletCount > 0)
                 {
