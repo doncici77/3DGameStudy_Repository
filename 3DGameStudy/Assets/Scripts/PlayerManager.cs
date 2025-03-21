@@ -122,14 +122,11 @@ public class PlayerManager : MonoBehaviour
     private float recoilStrength = 10.0f;
     private float maxRecoilAngle = 10.0f;
     private float currentRecoil = 0;
-    private float shakeDuration = 0.1f;
-    private float shakeMegnitude = 0.1f;
+    private float shakeDuration = 0.03f;
+    private float shakeMegnitude = 0.02f;
     private Vector3 originalCameraPosition;
     private Coroutine cameraShakeCoroutine;
 
-    private bool canOpen = false;
-    private GameObject doorObj;
-    private bool openingDoor = false;
 
     private void Awake()
     {
@@ -208,8 +205,6 @@ public class PlayerManager : MonoBehaviour
 
             Fire(); // 총 발사 함수
 
-            OpenDoor(); // 문 관련 함수
-
             SetAnimator(); // 에니메이션 세팅
 
             SetMove(); // 움직임 상태 세팅
@@ -237,44 +232,6 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    void OpenDoor()
-    {
-        if(Input.GetKeyDown(KeyCode.G) && canOpen)
-        {
-            Debug.Log("문열기 가능");
-
-            GameObject openDoorChildObj = doorObj.transform.GetChild(0).gameObject;
-
-
-            if(doorObj.transform.position.x < transform.position.x)
-            {
-                if(!openingDoor)
-                {
-                    openDoorChildObj.transform.Rotate(0, 0, -90);
-                    openingDoor = true;
-                }
-                else
-                {
-                    openDoorChildObj.transform.rotation = Quaternion.Euler(new Vector3(-90, 0, 0));
-                    openingDoor = false;
-                }
-            }
-            else if(doorObj.transform.position.x > transform.position.x)
-            {
-                if (!openingDoor)
-                {
-                    openDoorChildObj.transform.Rotate(0, 0, 90);
-                    openingDoor = true;
-                }
-                else
-                {
-                    openDoorChildObj.transform.rotation = Quaternion.Euler(new Vector3(-90, 0, 0));
-                    openingDoor = false;
-                }
-            }
-
-        }
-    }
 
     void FireShotgun()
     {
@@ -419,23 +376,36 @@ public class PlayerManager : MonoBehaviour
 
         foreach (RaycastHit hit in hits)
         {
-            hit.collider.gameObject.SetActive(false);
             Debug.Log("Item : " + hit.collider.name);
             SoundManager.Instance.PlaySFX("PickUpSound", transform.position, false);
 
             if (hit.collider.name == "Rifle")
             {
+                hit.collider.gameObject.SetActive(false);
                 isHasItemRifle = true;
                 itemIcon.SetActive(true);
             }
-            if (hit.collider.name == "Ammo")
+            else if (hit.collider.name == "Ammo")
             {
+                hit.collider.gameObject.SetActive(false);
                 savebulletCount += 30;
                 if(savebulletCount >= 120)
                 {
                     savebulletCount = 120;
                 }
                 bulletText.text = $"{firebulletCount}/{savebulletCount}";
+            }
+            else if(hit.collider.name == "Door")
+            {
+                if(hit.collider.GetComponent<DoorManager>().isOpen)
+                {
+                    hit.collider.GetComponent<Animator>().SetTrigger("OpenBackward");
+                    hit.collider.GetComponent<DoorManager>().isOpen = false;
+                }
+                else
+                {
+                    hit.collider.GetComponent<Animator>().SetTrigger("OpenForward");
+                }
             }
         }
     }
@@ -729,8 +699,8 @@ public class PlayerManager : MonoBehaviour
                 }
                 else if(currentWeaponMode == WeaponMode.Rifle)
                 {
-                    recoilStrength = 0.2f;
-                    maxRecoilAngle = 1f;
+                    recoilStrength = 0.01f;
+                    maxRecoilAngle = 0.1f;
                 }
 
                 Debug.Log("recoilStrength : " + recoilStrength);
@@ -915,23 +885,6 @@ public class PlayerManager : MonoBehaviour
                 playerHpText.text = $"HP:{playerHp}";
                 StartCoroutine(DelayTakeDamage()); // 일정 시간 후 다시 가능하도록
             }
-
-            if(other.gameObject.tag =="Door")
-            {
-                canOpen = true;
-                doorObj = other.gameObject;
-            }
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.tag == "Door")
-        {
-            canOpen = false;
-            doorObj = other.gameObject;
-            GameObject openDoorChildObj = doorObj.transform.GetChild(0).gameObject;
-            openDoorChildObj.transform.rotation = Quaternion.Euler(new Vector3(-90, 0, 0));
         }
     }
 
@@ -959,6 +912,8 @@ public class PlayerManager : MonoBehaviour
     /// <param name="direction"></param>
     void DebugBox(Vector3 origin, Vector3 direction)
     {
+        Debug.Log("박스 레이케스트 디버그 생성");
+
         Vector3 endPoint = origin + direction * castDistance;
 
         Vector3[] corners = new Vector3[8];
