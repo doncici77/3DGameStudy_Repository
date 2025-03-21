@@ -1,12 +1,20 @@
-using System;
 using System.Collections;
 using System.Linq;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Android;
 using UnityEngine.Animations.Rigging;
 using UnityEngine.Audio;
 using UnityEngine.InputSystem.Processors;
+using UnityEngine.SocialPlatforms;
 using UnityEngine.UI; // NameSpace : 소속
+
+public enum WeaponMode
+{
+    Pistol,
+    Shotgun,
+    Rifle
+}
 
 public class PlayerManager : MonoBehaviour
 {
@@ -81,6 +89,7 @@ public class PlayerManager : MonoBehaviour
     private bool isCanAim = false;
 
     public ParticleSystem rifleEffect;
+    public Transform rifleEffectPos;
     private float fireDelay = 0.5f;
 
     public ParticleSystem damageParticleSystem;
@@ -106,6 +115,17 @@ public class PlayerManager : MonoBehaviour
     private Coroutine runSoundCoroutine = null;
 
     private float currentMoveSpeed;
+
+    private WeaponMode currentWeaponMode= WeaponMode.Rifle;
+    private int ShotgunRayCount = 5;
+    private float shotgunSpreadAngle = 10.0f;
+    private float recoilStrength = 10.0f;
+    private float maxRecoilAngle = 10.0f;
+    private float currentRecoil = 0;
+    private float shakeDuration = 0.1f;
+    private float shakeMegnitude = 0.1f;
+    private Vector3 originalCameraPosition;
+    private Coroutine cameraShakeCoroutine;
 
     private void Awake()
     {
@@ -199,7 +219,77 @@ public class PlayerManager : MonoBehaviour
             {
                 ActionFlashLight();
             }
+
+            if (currentRecoil > 0)
+            {
+                currentRecoil -= recoilStrength * Time.deltaTime;
+                currentRecoil = Mathf.Clamp(currentRecoil, 0, maxRecoilAngle);
+                Quaternion currentRotation = Camera.main.transform.rotation;
+                Quaternion recoilRotation = Quaternion.Euler(-currentRecoil, 0, 0);
+                Camera.main.transform.rotation = currentRotation * recoilRotation; // 카메라를 제어하는 코드를 꺼야 한다
+            }
         }
+    }
+
+    void FireShotgun()
+    {
+        for (int i = 0; i < ShotgunRayCount; i++)
+        {
+            RaycastHit hit;
+
+            Vector3 origin = Camera.main.transform.position;
+            Vector3 spreadDirection = GetSpreadDirection(Camera.main.transform.forward, shotgunSpreadAngle);
+            Debug.DrawRay(origin, spreadDirection * castDistance, Color.green, 2.0f);
+            if(Physics.Raycast(origin, spreadDirection, out hit, castDistance, targetLayerMask))
+            {
+                Debug.Log("Shotgun Hit : " +  hit.collider.name);
+            }
+        }
+    }
+
+    Vector3 GetSpreadDirection(Vector3 forwardDirection, float spreadAngle)
+    {
+        float spreadX = UnityEngine.Random.Range(-spreadAngle, spreadAngle);
+        float spreadY = UnityEngine.Random.Range(-spreadAngle, spreadAngle);
+        Vector3 spreadDirection = Quaternion.Euler(spreadX, spreadY, 0) * forwardDirection;
+        return spreadDirection;
+    }
+
+    void ApplyRecoil()
+    {
+        Quaternion currentRotation = Camera.main.transform.rotation; // 현재 카메라 월드 회전값 가져오기
+        Quaternion recoilRotation = Quaternion.Euler(-currentRecoil, 0, 0); // 반동을 계산 하여 x축 상하회전에 추가
+        Camera.main.transform.rotation = currentRotation * recoilRotation; // 현재 회전값에 반동을 곱하여 새로운 회전값
+        currentRecoil += recoilStrength; // 반동값을 증가
+        currentRecoil = Mathf.Clamp(currentRecoil, 0, maxRecoilAngle); // 반동값을 제한
+    }
+
+    void StartCameraShake()
+    {
+        if(cameraShakeCoroutine != null)
+        {
+            StopCoroutine(cameraShakeCoroutine);
+        }
+        cameraShakeCoroutine = StartCoroutine(CameraShake(shakeDuration, shakeMegnitude));
+    }
+
+    IEnumerator CameraShake(float duration, float magnitude)
+    {
+        float elapsed = 0;
+        Vector3 originalPosition = Camera.main.transform.position;
+        while(elapsed < duration)
+        {
+            float offsetX = UnityEngine.Random.Range(-1, 1) * magnitude;
+            float offsetY = UnityEngine.Random.Range(-1, 1) * magnitude;
+
+            Camera.main.transform.position = originalPosition + new Vector3(offsetX, offsetY, 0);
+
+            elapsed += Time.deltaTime;
+
+            yield return null;
+        }
+
+        Camera.main.transform.position = originalPosition;
     }
 
     public void ReGame()
@@ -587,6 +677,16 @@ public class PlayerManager : MonoBehaviour
         {
             if (isAim && !isFire)
             {
+                if(currentWeaponMode == WeaponMode.Shotgun)
+                {
+
+                    FireShotgun();
+                }
+                else if(currentWeaponMode == WeaponMode.Rifle)
+                {
+
+                }
+
                 if(firebulletCount > 0)
                 {
                     //Weapon Type MaxDistance Set
@@ -597,6 +697,9 @@ public class PlayerManager : MonoBehaviour
                     animator.SetTrigger("Fire");
                     isFire = true;
                     StartCoroutine(DelayFire());
+
+                    ApplyRecoil();
+                    StartCameraShake();
 
                     Ray ray = new Ray(mainCamera.transform.position, mainCamera.transform.forward);
                     RaycastHit[] hits = Physics.RaycastAll(ray, weaponMaxDistance, targetLayerMask);
@@ -625,8 +728,10 @@ public class PlayerManager : MonoBehaviour
                             Debug.DrawLine(ray.origin, hits[0].point, Color.red, 2.0f);
                             hits[0].collider.GetComponent<ZombieManager>().TakeDamage(3.0f);
 
-                            ParticleSystem particle = Instantiate(damageParticleSystem, hits[0].point, Quaternion.identity);
-                            particle.Play();
+                            //ParticleSystem particle = Instantiate(damageParticleSystem, hits[0].point, Quaternion.identity);
+                            //particle.Play();
+
+                            ParticleManager.Instance.ParticlePlay(ParticleType.DamageExplosion, hits[0].transform, hits[0].transform.localScale);
                             SoundManager.Instance.PlaySFX("ZombieTakeDamageSound", hits[0].collider.transform.position, true);
                         }
                     }
@@ -672,7 +777,9 @@ public class PlayerManager : MonoBehaviour
     public void FireSoundOn()   
     {
         SoundManager.Instance.PlaySFX("FireSound", transform.position, false);
-        rifleEffect.Play();
+        //rifleEffect.Play();
+
+        ParticleManager.Instance.ParticlePlay(ParticleType.WeaponFire, rifleEffectPos, new Vector3(1, 1, 1));
     }
 
     public void WalkSound()

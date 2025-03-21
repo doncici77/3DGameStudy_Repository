@@ -59,7 +59,7 @@ public class ParticleManager : MonoBehaviour
         }
     }
 
-    public void ParticlePlay(ParticleType type, Vector3 position)
+    public void ParticlePlay(ParticleType type, Transform position, Vector3 scale)
     {
         /*if(particleSystemDic.ContainsKey(type))
         {
@@ -77,7 +77,8 @@ public class ParticleManager : MonoBehaviour
 
             if(particleObj != null)
             {
-                particleObj.transform.position = position;
+                particleObj.transform.SetParent(position);  // 부모(포지션) 설정
+                particleObj.transform.localPosition = Vector3.zero;  // 부모 기준 위치 초기화
                 ParticleSystem particleSystem = particleObj.GetComponentInChildren<ParticleSystem>();
 
                 if(particleSystem.isPlaying)
@@ -85,6 +86,7 @@ public class ParticleManager : MonoBehaviour
                     particleSystem.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
                 }
 
+                particleObj.transform.localScale = scale;
                 particleObj.SetActive(true);
                 particleSystem.Play();
                 StartCoroutine(particleEnd(type, particleObj, particleSystem));

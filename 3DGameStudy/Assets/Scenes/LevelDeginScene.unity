@@ -20333,9 +20333,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1888588618}
     - target: {fileID: 3811789614517898161, guid: acaa39ec356074546bf4bf8581128bf7, type: 3}
+      propertyPath: rifleEffectPos
+      value: 
+      objectReference: {fileID: 1310685046}
+    - target: {fileID: 3811789614517898161, guid: acaa39ec356074546bf4bf8581128bf7, type: 3}
       propertyPath: cameraTransform
       value: 
       objectReference: {fileID: 426934322}
+    - target: {fileID: 3883485390521504502, guid: acaa39ec356074546bf4bf8581128bf7, type: 3}
+      propertyPath: lengthInSec
+      value: 0.3
+      objectReference: {fileID: 0}
     - target: {fileID: 4884204767620321606, guid: acaa39ec356074546bf4bf8581128bf7, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.1
@@ -20380,11 +20388,41 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 6208636448041440484, guid: acaa39ec356074546bf4bf8581128bf7, type: 3}
+      propertyPath: lengthInSec
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6738316190484506963, guid: acaa39ec356074546bf4bf8581128bf7, type: 3}
+      propertyPath: lengthInSec
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6775688856428575511, guid: acaa39ec356074546bf4bf8581128bf7, type: 3}
+      propertyPath: lengthInSec
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6790430792729896860, guid: acaa39ec356074546bf4bf8581128bf7, type: 3}
+      propertyPath: lengthInSec
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7822151948991301790, guid: acaa39ec356074546bf4bf8581128bf7, type: 3}
+      propertyPath: lengthInSec
+      value: 0.3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: acaa39ec356074546bf4bf8581128bf7, type: 3}
+--- !u!4 &1310685046 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8473502914253252991, guid: acaa39ec356074546bf4bf8581128bf7, type: 3}
+  m_PrefabInstance: {fileID: 1310685045}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1310685047 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1085954846562148148, guid: acaa39ec356074546bf4bf8581128bf7, type: 3}
+  m_PrefabInstance: {fileID: 1310685045}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1311308379
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -33126,9 +33164,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b442d6662b17e744ea7d6e04bc9b3d27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponExplosionParticle: {fileID: 19800002, guid: 3b1513bcb86426b4795879be6a128ed7, type: 3}
+  weaponExplosionParticle: {fileID: 100002, guid: 3b1513bcb86426b4795879be6a128ed7, type: 3}
   weaponSmokeParticle: {fileID: 0}
-  weaponFireParticle: {fileID: 19800006, guid: c888f0c922d622147bbdbe2ca794142b, type: 3}
+  weaponFireParticle: {fileID: 1310685047}
   poolSize: 30
 --- !u!4 &2133095851
 Transform:
