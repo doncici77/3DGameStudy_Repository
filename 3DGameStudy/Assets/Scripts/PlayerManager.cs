@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
@@ -124,6 +125,8 @@ public class PlayerManager : MonoBehaviour
 
     private bool lastOpenedForward = false;
 
+    private bool rifleAutomaticMod = false;
+
     private void Awake()
     {
         if(Instance == null)
@@ -191,6 +194,8 @@ public class PlayerManager : MonoBehaviour
                     SettingZoom(); // 줌 상태 변경 함수
                 }
 
+                SetRifleMod(); // 총 연발, 단발 변경
+
                 SetRifle(); // 총 꺼내는 애니메이션 함수
 
                 Reload(); // 재장전 함수
@@ -241,6 +246,15 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+    private void SetRifleMod()
+    {
+        if(Input.GetKeyDown(KeyCode.B))
+        {
+            SoundManager.Instance.PlaySFX("FlashLightOnSound", transform.position, false);
+            rifleAutomaticMod = !rifleAutomaticMod;
+            Debug.Log("연사모드 : " + rifleAutomaticMod);
+        }
+    }
 
     void FireShotgun()
     {
@@ -726,74 +740,136 @@ public class PlayerManager : MonoBehaviour
 
     void Fire()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (!rifleAutomaticMod)
         {
-            if (isAim && !isFire)
+            if (Input.GetMouseButtonDown(0))
             {
-                if(currentWeaponMode == WeaponMode.Shotgun)
+                if (isAim && !isFire)
                 {
-
-                    FireShotgun();
-                }
-                else if(currentWeaponMode == WeaponMode.Rifle)
-                {
-                    recoilStrength = 0.01f;
-                    maxRecoilAngle = 0.1f;
-                }
-
-                Debug.Log("recoilStrength : " + recoilStrength);
-
-                if(firebulletCount > 0)
-                {
-                    //Weapon Type MaxDistance Set
-                    weaponMaxDistance = 1000.0f;
-
-                    firebulletCount--;
-                    bulletText.text = $"{firebulletCount.ToString()}/{savebulletCount.ToString()}";
-                    animator.SetTrigger("Fire");
-                    isFire = true;
-                    StartCoroutine(DelayFire());
-
-                    ApplyRecoil();
-                    StartCameraShake();
-
-                    Ray ray = new Ray(mainCamera.transform.position, mainCamera.transform.forward);
-                    RaycastHit[] hits = Physics.RaycastAll(ray, weaponMaxDistance, targetLayerMask);
-
-                    if (hits.Length > 0)
+                    if (currentWeaponMode == WeaponMode.Shotgun)
                     {
-                        // 거리를 기준으로 정렬
-                        hits = hits.OrderBy(hit => hit.distance).ToArray();
 
-                        if (hits.Length > 2)
+                        FireShotgun();
+                    }
+                    else if (currentWeaponMode == WeaponMode.Rifle)
+                    {
+                        recoilStrength = 0.01f;
+                        maxRecoilAngle = 0.1f;
+                    }
+
+                    Debug.Log("recoilStrength : " + recoilStrength);
+
+                    if (firebulletCount > 0)
+                    {
+                        //Weapon Type MaxDistance Set
+                        weaponMaxDistance = 1000.0f;
+
+                        firebulletCount--;
+                        bulletText.text = $"{firebulletCount.ToString()}/{savebulletCount.ToString()}";
+                        animator.SetTrigger("Fire");
+                        isFire = true;
+                        StartCoroutine(DelayFire());
+
+                        ApplyRecoil();
+                        StartCameraShake();
+
+                        Ray ray = new Ray(mainCamera.transform.position, mainCamera.transform.forward);
+                        RaycastHit[] hits = Physics.RaycastAll(ray, weaponMaxDistance, targetLayerMask);
+
+                        if (hits.Length > 0)
                         {
-                            for (int i = 0; i < 2; i++)
-                            {
-                                Debug.Log("충돌 : " + hits[i].collider.name);
-                                Debug.DrawLine(ray.origin, hits[i].point, Color.red, 2.0f);
-                                hits[i].collider.GetComponent<ZombieManager>().TakeDamage(3.0f);
+                            // 거리를 기준으로 정렬
+                            hits = hits.OrderBy(hit => hit.distance).ToArray();
 
-                                ParticleSystem particle = Instantiate(damageParticleSystem, hits[i].point, Quaternion.identity);
-                                particle.Play();
-                                SoundManager.Instance.PlaySFX("ZombieTakeDamageSound", hits[i].collider.transform.position, true);
+                            if (hits.Length > 2)
+                            {
+                                for (int i = 0; i < 2; i++)
+                                {
+                                    Debug.Log("충돌 : " + hits[i].collider.name);
+                                    Debug.DrawLine(ray.origin, hits[i].point, Color.red, 2.0f);
+                                    hits[i].collider.GetComponent<ZombieManager>().TakeDamage(3.0f);
+
+                                    ParticleSystem particle = Instantiate(damageParticleSystem, hits[i].point, Quaternion.identity);
+                                    particle.Play();
+                                    SoundManager.Instance.PlaySFX("ZombieTakeDamageSound", hits[i].collider.transform.position, true);
+                                }
+                            }
+                            else
+                            {
+                                Debug.Log("충돌 : " + hits[0].collider.name);
+                                Debug.DrawLine(ray.origin, hits[0].point, Color.red, 2.0f);
+                                hits[0].collider.GetComponent<ZombieManager>().TakeDamage(3.0f);
+
+                                //ParticleSystem particle = Instantiate(damageParticleSystem, hits[0].point, Quaternion.identity);
+                                //particle.Play();
+
+                                ParticleManager.Instance.ParticlePlay(ParticleType.DamageExplosion, hits[0].transform, hits[0].transform.localScale);
+                                SoundManager.Instance.PlaySFX("ZombieTakeDamageSound", hits[0].collider.transform.position, true);
                             }
                         }
                         else
                         {
-                            Debug.Log("충돌 : " + hits[0].collider.name);
-                            Debug.DrawLine(ray.origin, hits[0].point, Color.red, 2.0f);
-                            hits[0].collider.GetComponent<ZombieManager>().TakeDamage(3.0f);
-
-                            //ParticleSystem particle = Instantiate(damageParticleSystem, hits[0].point, Quaternion.identity);
-                            //particle.Play();
-
-                            ParticleManager.Instance.ParticlePlay(ParticleType.DamageExplosion, hits[0].transform, hits[0].transform.localScale);
-                            SoundManager.Instance.PlaySFX("ZombieTakeDamageSound", hits[0].collider.transform.position, true);
+                            Debug.DrawLine(ray.origin, ray.origin + ray.direction * weaponMaxDistance, Color.green, 2.0f);
                         }
                     }
-                    else
+                }
+            }
+        }
+        else
+        {
+            if (Input.GetMouseButton(0))
+            {
+                if (isAim && !isFire)
+                {
+                    if (firebulletCount > 0)
                     {
-                        Debug.DrawLine(ray.origin, ray.origin + ray.direction * weaponMaxDistance, Color.green, 2.0f);
+                        //Weapon Type MaxDistance Set
+                        weaponMaxDistance = 1000.0f;
+
+                        firebulletCount--;
+                        bulletText.text = $"{firebulletCount.ToString()}/{savebulletCount.ToString()}";
+                        StartCoroutine(DelayAutomaticFire());
+
+                        StartCameraShake();
+
+                        Ray ray = new Ray(mainCamera.transform.position, mainCamera.transform.forward);
+                        RaycastHit[] hits = Physics.RaycastAll(ray, weaponMaxDistance, targetLayerMask);
+
+                        if (hits.Length > 0)
+                        {
+                            // 거리를 기준으로 정렬
+                            hits = hits.OrderBy(hit => hit.distance).ToArray();
+
+                            if (hits.Length > 2)
+                            {
+                                for (int i = 0; i < 2; i++)
+                                {
+                                    Debug.Log("충돌 : " + hits[i].collider.name);
+                                    Debug.DrawLine(ray.origin, hits[i].point, Color.red, 2.0f);
+                                    hits[i].collider.GetComponent<ZombieManager>().TakeDamage(3.0f);
+
+                                    ParticleSystem particle = Instantiate(damageParticleSystem, hits[i].point, Quaternion.identity);
+                                    particle.Play();
+                                    SoundManager.Instance.PlaySFX("ZombieTakeDamageSound", hits[i].collider.transform.position, true);
+                                }
+                            }
+                            else
+                            {
+                                Debug.Log("충돌 : " + hits[0].collider.name);
+                                Debug.DrawLine(ray.origin, hits[0].point, Color.red, 2.0f);
+                                hits[0].collider.GetComponent<ZombieManager>().TakeDamage(3.0f);
+
+                                //ParticleSystem particle = Instantiate(damageParticleSystem, hits[0].point, Quaternion.identity);
+                                //particle.Play();
+
+                                ParticleManager.Instance.ParticlePlay(ParticleType.DamageExplosion, hits[0].transform, hits[0].transform.localScale);
+                                SoundManager.Instance.PlaySFX("ZombieTakeDamageSound", hits[0].collider.transform.position, true);
+                            }
+                        }
+                        else
+                        {
+                            Debug.DrawLine(ray.origin, ray.origin + ray.direction * weaponMaxDistance, Color.green, 2.0f);
+                        }
                     }
                 }
             }
@@ -822,6 +898,14 @@ public class PlayerManager : MonoBehaviour
     IEnumerator DelayFire()
     {
         yield return new WaitForSeconds(fireDelay);
+        isFire = false;
+    }
+
+    IEnumerator DelayAutomaticFire()
+    {
+        animator.SetTrigger("Fire");
+        isFire = true;
+        yield return new WaitForSeconds(0.15f);
         isFire = false;
     }
 
