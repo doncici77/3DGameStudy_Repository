@@ -9,6 +9,9 @@ TagManager:
   - CinemachineTarget
   - PlayerDamage
   - Door
+  - Ammo
+  - Rifle
+  - HP
   layers:
   - Default
   - TransparentFX

@@ -6,7 +6,8 @@ public enum ParticleType
 {
     DamageExplosion,
     WeaponFire,
-    WeaponSmoke
+    WeaponSmoke,
+    Healing
 }
 
 public class ParticleManager : MonoBehaviour
@@ -23,6 +24,7 @@ public class ParticleManager : MonoBehaviour
     public GameObject weaponExplosionParticle;
     public GameObject weaponSmokeParticle;
     public GameObject weaponFireParticle;
+    public GameObject HealingParticle;
 
     public int poolSize = 30;
 
@@ -44,8 +46,9 @@ public class ParticleManager : MonoBehaviour
         particleSystemDic.Add(ParticleType.DamageExplosion, weaponExplosionParticle);
         particleSystemDic.Add(ParticleType.WeaponFire, weaponFireParticle);
         particleSystemDic.Add(ParticleType.WeaponSmoke, weaponSmokeParticle);
+        particleSystemDic.Add(ParticleType.Healing, HealingParticle);
 
-        foreach(var type in particleSystemDic.Keys)
+        foreach (var type in particleSystemDic.Keys)
         {
             Queue<GameObject> pool = new Queue<GameObject>();
             for(int i = 0; i < poolSize; i++)
@@ -61,16 +64,6 @@ public class ParticleManager : MonoBehaviour
 
     public void ParticlePlay(ParticleType type, Transform position, Vector3 scale)
     {
-        /*if(particleSystemDic.ContainsKey(type))
-        {
-            ParticleSystem particle = Instantiate(particleSystemDic[type], position, Quaternion.identity);
-            Transform playerTransform = PlayerManager.Instance.transform;
-            Vector3 directionToPlayer= playerTransform.position - position;
-            Quaternion rotation = Quaternion.LookRotation(directionToPlayer);
-            particle.Play();
-            Destroy(particle.gameObject, particle.main.duration); // 파티클이 재생된 후 제거
-        }*/
-
         if(particlePools.ContainsKey(type))
         {
             GameObject particleObj = particlePools[type].Dequeue();

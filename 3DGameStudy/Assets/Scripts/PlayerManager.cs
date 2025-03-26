@@ -386,16 +386,16 @@ public class PlayerManager : MonoBehaviour
 
         foreach (RaycastHit hit in hits)
         {
-            Debug.Log("Item : " + hit.collider.name);
+            Debug.Log("Item : " + hit.collider.tag);
             SoundManager.Instance.PlaySFX("PickUpSound", transform.position, false);
 
-            if (hit.collider.name == "Rifle")
+            if (hit.collider.tag == "Rifle")
             {
                 hit.collider.gameObject.SetActive(false);
                 isHasItemRifle = true;
                 itemIcon.SetActive(true);
             }
-            else if (hit.collider.name == "Ammo")
+            else if (hit.collider.tag == "Ammo")
             {
                 hit.collider.gameObject.SetActive(false);
                 savebulletCount += 30;
@@ -405,7 +405,19 @@ public class PlayerManager : MonoBehaviour
                 }
                 bulletText.text = $"{firebulletCount}/{savebulletCount}";
             }
-            else if(hit.collider.name == "Door")
+            else if (hit.collider.tag == "HP")
+            {
+                hit.collider.gameObject.SetActive(false);
+
+                ParticleManager.Instance.ParticlePlay(ParticleType.Healing, transform, new Vector3(1, 1, 1));
+                playerHp += 50;
+                if (playerHp >= 100)
+                {
+                    playerHp = 100;
+                }
+                playerHpText.text = $"HP:{playerHp}";
+            }
+            else if(hit.collider.tag     == "Door")
             {
                 DoorManager doorManager = hit.collider.GetComponent<DoorManager>();
 
