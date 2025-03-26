@@ -6,6 +6,7 @@ using UnityEngine.Android;
 using UnityEngine.Animations.Rigging;
 using UnityEngine.Audio;
 using UnityEngine.InputSystem.Processors;
+using UnityEngine.SceneManagement;
 using UnityEngine.SocialPlatforms;
 using UnityEngine.UI; // NameSpace : 소속
 
@@ -164,6 +165,19 @@ public class PlayerManager : MonoBehaviour
 
         SoundManager.Instance.PlayBGM("InGameBGMSound");
         SoundManager.Instance.SetSFXVolume(0.7f);
+
+        RenderSettings.fog = true; //안개 효과 활성화
+        RenderSettings.fogColor = Color.blue; //안개의 색 설정
+        RenderSettings.fogDensity = 1.0f; //안개의 밀도 설정
+        RenderSettings.fogStartDistance = 10.0f; //안개 시작 거리와 종료거리 설정(Linear모드에서 사용)
+        RenderSettings.fogEndDistance = 100.0f;
+        RenderSettings.fogMode = FogMode.Exponential; //(지수 함수 기반 안개)
+
+        if(mainCamera != null) //카메라의 Clear Flags를 Solid Color로 설정하고, 배경색을 안개색으로 설정
+        {
+            mainCamera.clearFlags = CameraClearFlags.SolidColor;
+            mainCamera.backgroundColor = RenderSettings.fogColor;
+        }
     }
 
     void Update()
@@ -961,4 +975,15 @@ public class PlayerManager : MonoBehaviour
         Debug.DrawRay(origin, direction * castDistance, Color.green);
 
     }
+
+    /// <summary>
+    /// 씬이 로드 될때 호출되는 함수
+    /// </summary>
+    /// <param name="scene"></param>
+    /// <param name="mode"></param>
+    //void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    //{
+    //    Debug.Log("Loaded Scene : " + scene.name);
+    //    //플레이어, Ai, Item, Weapon
+    //}
 }
