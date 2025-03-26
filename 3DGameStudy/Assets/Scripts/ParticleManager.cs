@@ -62,40 +62,6 @@ public class ParticleManager : MonoBehaviour
         }
     }
 
-    private void SettingParticle()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            if (Instance != this)
-            {
-                Destroy(gameObject);
-            }
-        }
-
-        particleSystemDic.Add(ParticleType.DamageExplosion, weaponExplosionParticle);
-        particleSystemDic.Add(ParticleType.WeaponFire, weaponFireParticle);
-        particleSystemDic.Add(ParticleType.WeaponSmoke, weaponSmokeParticle);
-        particleSystemDic.Add(ParticleType.Healing, HealingParticle);
-
-        foreach (var type in particleSystemDic.Keys)
-        {
-            Queue<GameObject> pool = new Queue<GameObject>();
-            for (int i = 0; i < poolSize; i++)
-            {
-                GameObject obj = Instantiate(particleSystemDic[type]);
-                obj.gameObject.SetActive(false);
-                pool.Enqueue(obj);
-            }
-
-            particlePools.Add(type, pool);
-        }
-    }
-
     public void ParticlePlay(ParticleType type, Transform position, Vector3 scale)
     {
         if(particlePools.ContainsKey(type))
