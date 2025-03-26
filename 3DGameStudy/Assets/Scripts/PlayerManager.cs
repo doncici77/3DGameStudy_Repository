@@ -1,13 +1,7 @@
 using System.Collections;
 using System.Linq;
-using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.Android;
 using UnityEngine.Animations.Rigging;
-using UnityEngine.Audio;
-using UnityEngine.InputSystem.Processors;
-using UnityEngine.SceneManagement;
-using UnityEngine.SocialPlatforms;
 using UnityEngine.UI; // NameSpace : ¼Ò¼Ó
 
 public enum WeaponMode
