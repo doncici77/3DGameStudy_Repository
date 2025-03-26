@@ -166,18 +166,18 @@ public class PlayerManager : MonoBehaviour
         SoundManager.Instance.PlayBGM("InGameBGMSound");
         SoundManager.Instance.SetSFXVolume(0.7f);
 
-        RenderSettings.fog = true; //안개 효과 활성화
-        RenderSettings.fogColor = Color.blue; //안개의 색 설정
-        RenderSettings.fogDensity = 1.0f; //안개의 밀도 설정
-        RenderSettings.fogStartDistance = 10.0f; //안개 시작 거리와 종료거리 설정(Linear모드에서 사용)
-        RenderSettings.fogEndDistance = 100.0f;
-        RenderSettings.fogMode = FogMode.Exponential; //(지수 함수 기반 안개)
+        //RenderSettings.fog = true; //안개 효과 활성화
+        //RenderSettings.fogColor = Color.blue; //안개의 색 설정
+        //RenderSettings.fogDensity = 1.0f; //안개의 밀도 설정
+        //RenderSettings.fogStartDistance = 10.0f; //안개 시작 거리와 종료거리 설정(Linear모드에서 사용)
+        //RenderSettings.fogEndDistance = 100.0f;
+        //RenderSettings.fogMode = FogMode.Exponential; //(지수 함수 기반 안개)
 
-        if(mainCamera != null) //카메라의 Clear Flags를 Solid Color로 설정하고, 배경색을 안개색으로 설정
-        {
-            mainCamera.clearFlags = CameraClearFlags.SolidColor;
-            mainCamera.backgroundColor = RenderSettings.fogColor;
-        }
+        //if(mainCamera != null) //카메라의 Clear Flags를 Solid Color로 설정하고, 배경색을 안개색으로 설정
+        //{
+        //    mainCamera.clearFlags = CameraClearFlags.SolidColor;
+        //    mainCamera.backgroundColor = RenderSettings.fogColor;
+        //}
     }
 
     void Update()
