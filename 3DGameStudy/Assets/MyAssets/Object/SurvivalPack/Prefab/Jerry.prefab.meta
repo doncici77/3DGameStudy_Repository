@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: ae018aef64a8af149ac31816a82819f4
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 20565
+  packageName: Small Survival Pack
+  packageVersion: 1.1
+  assetPath: Assets/SurvivalPack/Prefab/Jerry.prefab
+  uploadId: 30648

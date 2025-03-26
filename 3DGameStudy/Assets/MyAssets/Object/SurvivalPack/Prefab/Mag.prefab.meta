@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: ed9fec1f563299440a87ef1950fd5cca
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 20565
+  packageName: Small Survival Pack
+  packageVersion: 1.1
+  assetPath: Assets/SurvivalPack/Prefab/Mag.prefab
+  uploadId: 30648

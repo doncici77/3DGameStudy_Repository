@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: b6e371fd719b84f46b02c7fd9d32dd43
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 20565
+  packageName: Small Survival Pack
+  packageVersion: 1.1
+  assetPath: Assets/SurvivalPack/Material/Silencer.mat
+  uploadId: 30648

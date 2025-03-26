@@ -8213,14 +8213,30 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8576658733608063036, guid: 1ecf5ffc33f6da4448e61ac6a4fb16d0, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8576658733608063036, guid: 1ecf5ffc33f6da4448e61ac6a4fb16d0, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1508691948}
+    - target: {fileID: 8576658733608063036, guid: 1ecf5ffc33f6da4448e61ac6a4fb16d0, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
+      value: LevelDeginScene
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 5978151159319522287, guid: 1ecf5ffc33f6da4448e61ac6a4fb16d0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1734221776}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1ecf5ffc33f6da4448e61ac6a4fb16d0, type: 3}
+--- !u!224 &386489474 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5978151159319522287, guid: 1ecf5ffc33f6da4448e61ac6a4fb16d0, type: 3}
+  m_PrefabInstance: {fileID: 386489473}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &387287841
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12056,7 +12072,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7808944008991861003, guid: a0992599e43d7c0418899bdc8853b2be, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9187668149646208854, guid: a0992599e43d7c0418899bdc8853b2be, type: 3}
       propertyPath: m_Radius
@@ -13733,7 +13749,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7808944008991861003, guid: a0992599e43d7c0418899bdc8853b2be, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9187668149646208854, guid: a0992599e43d7c0418899bdc8853b2be, type: 3}
       propertyPath: m_Radius
@@ -16460,7 +16476,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7808944008991861003, guid: a0992599e43d7c0418899bdc8853b2be, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 294923970357290882, guid: a0992599e43d7c0418899bdc8853b2be, type: 3}
@@ -25101,7 +25117,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4884204767620321606, guid: acaa39ec356074546bf4bf8581128bf7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 6.1
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 4884204767620321606, guid: acaa39ec356074546bf4bf8581128bf7, type: 3}
       propertyPath: m_LocalPosition.y
@@ -25109,7 +25125,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4884204767620321606, guid: acaa39ec356074546bf4bf8581128bf7, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -92.1
+      value: 16.5
       objectReference: {fileID: 0}
     - target: {fileID: 4884204767620321606, guid: acaa39ec356074546bf4bf8581128bf7, type: 3}
       propertyPath: m_LocalRotation.w
@@ -25158,6 +25174,13 @@ PrefabInstance:
     - target: {fileID: 6790430792729896860, guid: acaa39ec356074546bf4bf8581128bf7, type: 3}
       propertyPath: lengthInSec
       value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7594347049246206828, guid: acaa39ec356074546bf4bf8581128bf7, type: 3}
+      propertyPath: m_WarningMessage
+      value: "\nBinding warning: Some generic clip(s) animate transforms that are
+        already bound by a Humanoid avatar. These transforms can only be changed
+        by Humanoid clips.\n\tTransform 'spine_02'\n\tTransform 'spine_01'\n\tTransform
+        'spine_02'\n\tTransform 'spine_01'\n\tTransform 'spine_02'\n\tTransform 'spine_01'"
       objectReference: {fileID: 0}
     - target: {fileID: 7822151948991301790, guid: acaa39ec356074546bf4bf8581128bf7, type: 3}
       propertyPath: lengthInSec
@@ -26617,6 +26640,10 @@ PrefabInstance:
     - target: {fileID: 7808944008991861003, guid: a0992599e43d7c0418899bdc8853b2be, type: 3}
       propertyPath: m_Name
       value: Zombie
+      objectReference: {fileID: 0}
+    - target: {fileID: 7808944008991861003, guid: a0992599e43d7c0418899bdc8853b2be, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -34016,6 +34043,81 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4000011252147790, guid: 656004fa30eaa6f46a6439436e4618ec, type: 3}
   m_PrefabInstance: {fileID: 1733797573}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1734221775
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1734221776}
+  - component: {fileID: 1734221778}
+  - component: {fileID: 1734221777}
+  m_Layer: 5
+  m_Name: Panel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1734221776
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1734221775}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 386489474}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1734221777
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1734221775}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 0}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1734221778
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1734221775}
+  m_CullTransparentMesh: 1
 --- !u!1001 &1738765983
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -41132,6 +41234,7 @@ GameObject:
   - component: {fileID: 4239676123200309633}
   - component: {fileID: 1341689014328779197}
   - component: {fileID: 3297385866616541685}
+  - component: {fileID: 7592179316954218605}
   m_Layer: 0
   m_Name: 01_low
   m_TagString: Untagged
@@ -41139,6 +41242,27 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!65 &7592179316954218605
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7592179316954218604}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.046398453, y: 0.8030787, z: 1.9387606}
+  m_Center: {x: 0.01810803, y: -0.3916911, z: 0.9756203}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

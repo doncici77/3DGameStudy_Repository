@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 52cf2a42de425c04dbad2326efa3be14
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 20565
+  packageName: Small Survival Pack
+  packageVersion: 1.1
+  assetPath: Assets/SurvivalPack/Prefab/FirstAid.prefab
+  uploadId: 30648

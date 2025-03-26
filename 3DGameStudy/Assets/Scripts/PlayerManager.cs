@@ -127,6 +127,7 @@ public class PlayerManager : MonoBehaviour
     private Vector3 originalCameraPosition;
     private Coroutine cameraShakeCoroutine;
 
+    private bool lastOpenedForward = false;
 
     private void Awake()
     {
@@ -309,12 +310,13 @@ public class PlayerManager : MonoBehaviour
         Time.timeScale = 0; // 게임시간 정지
     }
 
-    public void Restart()
+    public void Restart(string restartSceneName)
     {
         Cursor.lockState = CursorLockMode.Locked;
         SoundManager.Instance.PlaySFX("MenuButtonClick" , transform.position, false);
         PauseObj.SetActive(false);
         Time.timeScale = 1.0f;
+        SceneController.Instance.LoadScene(restartSceneName);
     }
 
     public void Exit()
@@ -397,14 +399,30 @@ public class PlayerManager : MonoBehaviour
             }
             else if(hit.collider.name == "Door")
             {
-                if(hit.collider.GetComponent<DoorManager>().isOpen)
+                DoorManager doorManager = hit.collider.GetComponent<DoorManager>();
+
+                if(doorManager != null)
                 {
-                    hit.collider.GetComponent<Animator>().SetTrigger("OpenBackward");
-                    hit.collider.GetComponent<DoorManager>().isOpen = false;
-                }
-                else
-                {
-                    hit.collider.GetComponent<Animator>().SetTrigger("OpenForward");
+                    if (doorManager.isOpen) //doorManager 문이 열려있을 경우
+                    {
+                        if(lastOpenedForward)
+                        {
+                            doorManager.CloseForward(transform);
+                        }
+                        else
+                        {
+                            doorManager.CloseBackward(transform);
+                        }
+                    }
+                    else //문이 닫혀 있을겨우
+                    {
+                        if(doorManager.Open(transform))
+                        {
+                            lastOpenedForward = doorManager.LastOpenedForward;
+                        }
+                    }
+
+                    return;
                 }
             }
         }
@@ -894,8 +912,10 @@ public class PlayerManager : MonoBehaviour
         isDead = true;
         ZoomOut();
         animator.SetTrigger("Dead");
+
         yield return new WaitForSeconds(4.0f);
         gameObject.SetActive(false);
+        Pause();
     }
 
     private IEnumerator DelayTakeDamage()
