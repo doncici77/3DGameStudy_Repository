@@ -25,19 +25,19 @@ public class GameSettingUIManager1 : MonoBehaviour
 
     private void ApplySettings()
     {
-        string[] res = resolutions[resolutionIndex].Split('x');
-        int width = int.Parse(res[0]);
-        int height = int.Parse(res[1]);
-        Screen.SetResolution(width, height, isFullScreen);
-        QualitySettings.SetQualityLevel(qualityIndex);
+        //string[] res = resolutions[resolutionIndex].Split('x');
+        //int width = int.Parse(res[0]);
+        //int height = int.Parse(res[1]);
+        //Screen.SetResolution(width, height, isFullScreen);
+        //QualitySettings.SetQualityLevel(qualityIndex);
     }
 
     private void SaveSettings()
     {
-        PlayerPrefs.SetInt("ResolutionIndex", resolutionIndex);
-        PlayerPrefs.SetInt("GraphicsQualityIndex", qualityIndex);
-        PlayerPrefs.SetInt("FullScreen", isFullScreen ? 1 : 0);
-        PlayerPrefs.Save();
+        //PlayerPrefs.SetInt("ResolutionIndex", resolutionIndex);
+        //PlayerPrefs.SetInt("GraphicsQualityIndex", qualityIndex);
+        //PlayerPrefs.SetInt("FullScreen", isFullScreen ? 1 : 0);
+        //PlayerPrefs.Save();
     }
 
     private void LoadSettings()
@@ -98,13 +98,13 @@ public class GameSettingUIManager1 : MonoBehaviour
 
     public void OnSettings()
     {
+        Cursor.lockState = CursorLockMode.None;
         SoundManager.Instance.PlaySFX("MenuButtonClick", transform.position, false);
         SettingsObj.SetActive(true);
     }
 
     public void OffSettings()
     {
-        SoundManager.Instance.PlaySFX("MenuButtonClick", transform.position, false);
         SettingsObj.SetActive(false);
     }
 }

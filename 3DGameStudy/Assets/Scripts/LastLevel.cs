@@ -14,10 +14,16 @@ public class LastLevel : MonoBehaviour
     private int startKillCount;
     private int currentKillCount;
 
+    private BoxCollider boxCollider;
+
+    private void Start()
+    {
+        boxCollider = GetComponent<BoxCollider>();
+    }
+
     void Update()
     {
         currentKillCount = PlayerManager.Instance.killCount;
-        Debug.Log("currentKillCount - startKillCount : " + (currentKillCount - startKillCount));
         killCountText.text = $"{currentKillCount - startKillCount} / 90";
         if (currentKillCount - startKillCount == 90)
         {
@@ -40,6 +46,7 @@ public class LastLevel : MonoBehaviour
                 _3QusetObj.SetActive(false);
                 barricade.SetActive(true);
                 startKillCount = PlayerManager.Instance.killCount;
+                boxCollider.enabled = false;
             }
         }
     }

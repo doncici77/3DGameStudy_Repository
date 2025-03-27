@@ -134,7 +134,9 @@ public class PlayerManager : MonoBehaviour
 
     public Image fadeImage;  // 검은 화면
     public Text deathText; // "YOU DIED" 텍스트
-    public Text clearText; 
+    public Text clearText;
+
+    public LayerMask obstacleLayer; // 충돌 감지할 레이어
 
     private void Awake()
     {
@@ -180,6 +182,8 @@ public class PlayerManager : MonoBehaviour
 
         SoundManager.Instance.PlayBGM("InGameBGMSound");
         SoundManager.Instance.SetSFXVolume(0.7f);
+
+        Application.targetFrameRate = 60;
     }
 
     void Update()
@@ -208,15 +212,11 @@ public class PlayerManager : MonoBehaviour
 
             if(Input.GetKeyUp(KeyCode.Escape))
             {
-                isPaused = !isPaused;
+                isPaused = true;
 
                 if(isPaused)
                 {
                     Pause();
-                }
-                else
-                {
-                    ReGame();
                 }
             }
 
@@ -361,6 +361,7 @@ public class PlayerManager : MonoBehaviour
     {
         PauseObj.SetActive(true);
         Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
         Time.timeScale = 0; // 게임시간 정지
     }
 
@@ -696,14 +697,21 @@ public class PlayerManager : MonoBehaviour
     {
         if (isRotaterAroundPlayer)
         {
-            // 카메라가 플레이어 오른쪽에서 회전하도록 설정
+            // 카메라 목표 위치 설정
             Vector3 direction = new Vector3(0, 0, -currentDistance);
             Quaternion rotation = Quaternion.Euler(pitch, yaw, 0);
+            Vector3 targetPosition = transform.position + thirdPersonOffset + rotation * direction;
 
-            // 카메라를 플레이어의 오른쪽에서 고정된 위치로 이동
-            cameraTransform.position = transform.position + thirdPersonOffset + rotation * direction;
+            // 벽 충돌 감지 (Raycast)
+            Vector3 playerCenter = transform.position + Vector3.up * 1.5f;
+            if (Physics.Raycast(playerCenter, (targetPosition - playerCenter).normalized, out RaycastHit hit, currentDistance))
+            {
+                // 벽과 충돌하면 카메라를 벽 앞으로 이동
+                targetPosition = hit.point + hit.normal * 0.3f;
+            }
 
-            // 카메라가 플레이어의 위치를 따라가도록 설정
+            // 카메라 위치 적용
+            cameraTransform.position = targetPosition;
             cameraTransform.LookAt(transform.position + new Vector3(0, thirdPersonOffset.y, 0));
         }
         else
@@ -711,11 +719,22 @@ public class PlayerManager : MonoBehaviour
             // 플레이어가 직접 회전하는 모드
             transform.rotation = Quaternion.Euler(0f, yaw, 0f);
             Vector3 direction = new Vector3(0, 0, -currentDistance);
-            cameraTransform.position = playerLookObj.position + thirdPersonOffset + Quaternion.Euler(pitch, yaw, 0) * direction;
+            Vector3 targetPosition = playerLookObj.position + thirdPersonOffset + Quaternion.Euler(pitch, yaw, 0) * direction;
+
+            // 벽 충돌 감지
+            Vector3 playerCenter = playerLookObj.position + Vector3.up * 1.5f;
+            if (Physics.Raycast(playerCenter, (targetPosition - playerCenter).normalized, out RaycastHit hit, currentDistance))
+            {
+                targetPosition = hit.point + hit.normal * 0.3f;
+            }
+
+            // 카메라 위치 적용
+            cameraTransform.position = targetPosition;
             cameraTransform.LookAt(playerLookObj.position + new Vector3(0, thirdPersonOffset.y, 0));
         }
 
         UpdateAimTarget(); // 에임조정
+
     }
 
     public void SetTargetDistance(float distance)
@@ -867,8 +886,8 @@ public class PlayerManager : MonoBehaviour
                         isFire = true;
                         StartCoroutine(DelayFire());
 
-                        ApplyRecoil();
-                        StartCameraShake();
+                        //ApplyRecoil();
+                        //StartCameraShake();
 
                         Ray ray = new Ray(mainCamera.transform.position, mainCamera.transform.forward);
                         RaycastHit[] hits = Physics.RaycastAll(ray, weaponMaxDistance, targetLayerMask);

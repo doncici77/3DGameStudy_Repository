@@ -48,20 +48,20 @@ public class GameSettingUIManager : MonoBehaviour
 
     private void ApplySettings()
     {
-        string[] res = resolutions[resolutionIndex].Split('x');
-        int width = int.Parse(res[0]);
-        int height = int.Parse(res[1]);
-        Screen.SetResolution(width, height, isFullScreen);
-        QualitySettings.SetQualityLevel(qualityIndex);
+        //string[] res = resolutions[resolutionIndex].Split('x');
+        //int width = int.Parse(res[0]);
+        //int height = int.Parse(res[1]);
+        //Screen.SetResolution(width, height, isFullScreen);
+        //QualitySettings.SetQualityLevel(qualityIndex);
     }
 
     private void SaveSettings()
     {
-        PlayerPrefs.SetInt("ResolutionIndex", resolutionIndex);
-        PlayerPrefs.SetInt("GraphicsQualityIndex", qualityIndex);
-        PlayerPrefs.SetInt("FullScreen", isFullScreen ? 1 : 0);
-        PlayerPrefs.SetFloat("MouseSensitivitySlider", sensitivitySlider.value);
-        PlayerPrefs.Save();
+        //PlayerPrefs.SetInt("ResolutionIndex", resolutionIndex);
+        //PlayerPrefs.SetInt("GraphicsQualityIndex", qualityIndex);
+        //PlayerPrefs.SetInt("FullScreen", isFullScreen ? 1 : 0);
+        //PlayerPrefs.SetFloat("MouseSensitivitySlider", sensitivitySlider.value);
+        //PlayerPrefs.Save();
     }
 
     private void LoadSettings()
@@ -122,13 +122,13 @@ public class GameSettingUIManager : MonoBehaviour
 
     public void OnSettings()
     {
+        Cursor.lockState = CursorLockMode.None;
         SoundManager.Instance.PlaySFX("MenuButtonClick", transform.position, false);
         SettingsObj.SetActive(true);
     }
 
     public void OffSettings()
     {
-        SoundManager.Instance.PlaySFX("MenuButtonClick", transform.position, false);
         SettingsObj.SetActive(false);
     }
 }
