@@ -329,7 +329,7 @@ public class PlayerManager : MonoBehaviour
         SoundManager.Instance.PlaySFX("MenuButtonClick", transform.position, false);
         PauseObj.SetActive(false);
         Time.timeScale = 1.0f;
-        Application.Quit();
+        Application.Quit(); 
     }
 
     void UpdateAimTarget()
@@ -385,16 +385,17 @@ public class PlayerManager : MonoBehaviour
         {
             Debug.Log("Item : " + hit.collider.tag);
             SoundManager.Instance.SetSFXVolume(1);
-            SoundManager.Instance.PlaySFX("PickUpSound", transform.position, false);
 
             if (hit.collider.tag == "Rifle")
             {
+                SoundManager.Instance.PlaySFX("PickUpSound", transform.position, false);
                 hit.collider.gameObject.SetActive(false);
                 isHasItemRifle = true;
                 itemIcon.SetActive(true);
             }
             else if (hit.collider.tag == "Ammo")
             {
+                SoundManager.Instance.PlaySFX("PickUpSound", transform.position, false);
                 hit.collider.gameObject.SetActive(false);
                 savebulletCount += 30;
                 if(savebulletCount >= 300)
@@ -405,6 +406,7 @@ public class PlayerManager : MonoBehaviour
             }
             else if (hit.collider.tag == "HP")
             {
+                SoundManager.Instance.PlaySFX("HpSound", transform.position, false);
                 hit.collider.gameObject.SetActive(false);
 
                 ParticleManager.Instance.ParticlePlay(ParticleType.Healing, transform, new Vector3(1, 1, 1));
@@ -415,8 +417,9 @@ public class PlayerManager : MonoBehaviour
                 }
                 playerHpText.text = $"HP:{playerHp}";
             }
-            else if(hit.collider.tag     == "Door")
+            else if(hit.collider.tag == "Door")
             {
+                SoundManager.Instance.PlaySFX("DoorSound", transform.position, false);
                 DoorManager doorManager = hit.collider.GetComponent<DoorManager>();
 
                 if(doorManager != null)
@@ -817,8 +820,6 @@ public class PlayerManager : MonoBehaviour
                         firebulletCount--;
                         bulletText.text = $"{firebulletCount.ToString()}/{savebulletCount.ToString()}";
                         StartCoroutine(DelayAutomaticFire());
-
-                        StartCameraShake();
 
                         Ray ray = new Ray(mainCamera.transform.position, mainCamera.transform.forward);
                         RaycastHit[] hits = Physics.RaycastAll(ray, weaponMaxDistance, targetLayerMask);
