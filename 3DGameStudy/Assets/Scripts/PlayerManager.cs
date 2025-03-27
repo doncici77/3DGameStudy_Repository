@@ -400,9 +400,9 @@ public class PlayerManager : MonoBehaviour
             {
                 hit.collider.gameObject.SetActive(false);
                 savebulletCount += 30;
-                if(savebulletCount >= 120)
+                if(savebulletCount >= 300)
                 {
-                    savebulletCount = 120;
+                    savebulletCount = 300;
                 }
                 bulletText.text = $"{firebulletCount}/{savebulletCount}";
             }
