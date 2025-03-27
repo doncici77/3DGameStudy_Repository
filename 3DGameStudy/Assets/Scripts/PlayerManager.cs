@@ -172,7 +172,11 @@ public class PlayerManager : MonoBehaviour
 
         fadeImage.color = new Color(0, 0, 0, 0); // 시작은 투명
         deathText.color = new Color(1, 0, 0, 0); // 텍스트도 투명
-        clearText.color = new Color(1, 1, 0, 0); 
+        clearText.color = new Color(1, 1, 0, 0);
+
+        fadeImage.gameObject.SetActive(false);
+        deathText.gameObject.SetActive(false);
+        clearText.gameObject.SetActive(false);
 
         SoundManager.Instance.PlayBGM("InGameBGMSound");
         SoundManager.Instance.SetSFXVolume(0.7f);
@@ -330,26 +334,43 @@ public class PlayerManager : MonoBehaviour
 
     public void ReGame()
     {
+        // SoundManager가 null인지 확인 후 실행
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.SetSFXVolume(1);
+            SoundManager.Instance.PlaySFX("MenuButtonClick", transform.position, false);
+        }
+        Debug.Log("SoundManager.Instance != null : " + SoundManager.Instance != null);
+
+        // PauseObj가 존재할 경우에만 비활성화
+        if (PauseObj != null)
+        {
+            PauseObj.SetActive(false);
+        }
+        Debug.Log("PauseObj != null : " + PauseObj != null);
+
+        // 마우스 커서 잠금 및 숨기기
         Cursor.lockState = CursorLockMode.Locked;
-        SoundManager.Instance.SetSFXVolume(1);
-        SoundManager.Instance.PlaySFX("MenuButtonClick", transform.position, false);
-        PauseObj.SetActive(false);
-        Time.timeScale = 1.0f; // 게임 시간 재게
+        Cursor.visible = false;
+
+        // 게임 시간 재개
+        Time.timeScale = 1.0f;
     }
 
     void Pause()
     {
-        Cursor.lockState = CursorLockMode.None;
         PauseObj.SetActive(true);
+        Cursor.lockState = CursorLockMode.None;
         Time.timeScale = 0; // 게임시간 정지
     }
 
-    public void Restart(string restartSceneName)
+    public void Restart()
     {
-        Cursor.lockState = CursorLockMode.Locked;
+        SoundManager.Instance.SetSFXVolume(1);
         SoundManager.Instance.PlaySFX("MenuButtonClick", transform.position, false);
         PauseObj.SetActive(false);
         Time.timeScale = 1.0f;
+        Cursor.lockState = CursorLockMode.Locked;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
@@ -478,6 +499,8 @@ public class PlayerManager : MonoBehaviour
             }
             else if(hit.collider.name == "Helicopter")
             {
+                fadeImage.gameObject.SetActive(true);
+                clearText.gameObject.SetActive(true);
                 StartCoroutine(ClearSequence());
             }
         }
@@ -1147,6 +1170,8 @@ public class PlayerManager : MonoBehaviour
 
     public void ShowDeathScreen()
     {
+        fadeImage.gameObject.SetActive(true);
+        deathText.gameObject.SetActive(true);
         StartCoroutine(DeathSequence());
     }
 

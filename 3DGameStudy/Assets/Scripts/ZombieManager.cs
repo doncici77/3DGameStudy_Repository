@@ -20,16 +20,12 @@ public class ZombieManager : MonoBehaviour
     public EZombieState defaultState = EZombieState.Idle;
     public float attackRange = 1.0f; // 공격 범위
     public float attackDelay = 2.0f; // 공격 딜레이
-    private float nextAttackTime = 0.0f; // 다음 공격 시간관리
     public Transform[] patrolPoints; // 순찰 경로 지점들
     private int currentPoint = 0; // 현재 순찰 경로 지점 인덱스
     public float moveSpeed = 2.0f; // 이동속도
     public float trackingRange = 3.0f; // 추적 범위 설정
-    private bool isAttack = false; // 공격 상태
-    private float evadeRange = 5.0f; // 도망 상태 회피 거리
     private float zombieHp = 5.0f; // 좀비 체력
     private float distanceTotarget; // target과의 거리 계산 값
-    private bool isWaiting = false; // 상태 전환 후 대기상태 여부
     public float idleTime = 2.0f; // 각 상태 전환 후 대기시간
     private Coroutine stateRoutine; // 코루틴의 진행상태를 저장하는 변수
 

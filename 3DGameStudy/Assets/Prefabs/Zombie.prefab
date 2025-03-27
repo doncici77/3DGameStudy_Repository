@@ -2759,8 +2759,8 @@ MonoBehaviour:
   patrolPoints:
   - {fileID: 0}
   - {fileID: 0}
-  moveSpeed: 3
-  trackingRange: 200
+  moveSpeed: 5
+  trackingRange: 500
   idleTime: 2
   jumpHeight: 2
   jumpDuration: 1
