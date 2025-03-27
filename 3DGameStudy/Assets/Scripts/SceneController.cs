@@ -43,7 +43,9 @@ public class SceneController : MonoBehaviour
         SoundManager.Instance.SetSFXVolume(1f);
         SoundManager.Instance.PlaySFX("MenuButtonClick", transform.position, false);
 
-        StartCoroutine(DelayLoadScene(sceneName));
+        Debug.Log("SceneName : " + sceneName);
+
+        SceneLoader.Instance.StartLoading(sceneName);
     }
 
     public void OnSceneLoaded(String sceneName)
