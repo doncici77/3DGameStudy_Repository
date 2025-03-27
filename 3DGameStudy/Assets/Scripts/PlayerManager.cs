@@ -185,6 +185,9 @@ public class PlayerManager : MonoBehaviour
         SoundManager.Instance.SetSFXVolume(0.5f);
 
         Application.targetFrameRate = 60;
+
+        Screen.SetResolution(1080, 1920, true);
+        Screen.SetResolution(Screen.width, (Screen.width * 16) / 9, true);
     }
 
     void Update()
@@ -1208,7 +1211,7 @@ public class PlayerManager : MonoBehaviour
             yield return null;
         }
         deathText.color = new Color(1, 0, 0, 1); // 완전 빨간색
-        Time.timeScale = 0;
+
         yield return new WaitForSeconds(2f); // 2초 대기
 
         // 씬 다시 로드 (선택)

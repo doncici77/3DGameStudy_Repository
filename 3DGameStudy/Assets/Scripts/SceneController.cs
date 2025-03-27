@@ -35,6 +35,9 @@ public class SceneController : MonoBehaviour
 
     private void Start()
     {
+        Screen.SetResolution(1080, 1920, true);
+        Screen.SetResolution(Screen.width, (Screen.width * 16) / 9, true);
+
         SoundManager.Instance.SetBGMVolume(0.3f);
         SoundManager.Instance.PlayBGM("MenuBGMSound", 1f);
     }
