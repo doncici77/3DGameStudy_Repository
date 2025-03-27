@@ -65,6 +65,7 @@ public class ZombieManager : MonoBehaviour
 
     void AttackSoundOn()
     {
+        SoundManager.Instance.SetSFXVolume(0.5f);
         SoundManager.Instance.PlaySFX("ZombieAttackSound", transform.position, true);
         Animation animation = GetComponent<Animation>();
     }
@@ -187,6 +188,7 @@ public class ZombieManager : MonoBehaviour
         Debug.Log(gameObject.name + " : Ãß°ÝÁß");
 
         animator.SetBool("isMove", true);
+        SoundManager.Instance.SetSFXVolume(0.5f);
         SoundManager.Instance.PlaySFX("ZombieChaseSound", transform.position, true);
 
         while (currentState == EZombieState.Chase)
@@ -317,6 +319,7 @@ public class ZombieManager : MonoBehaviour
 
         Debug.Log(gameObject.name + " : Á×À½");
         animator.SetTrigger("isDie");
+        SoundManager.Instance.SetSFXVolume(0.5f);
         SoundManager.Instance.PlaySFX("ZombieDieSound", transform.position, true);
         yield return new WaitForSeconds(3.0f);
         PlayerManager.Instance.killCount++;

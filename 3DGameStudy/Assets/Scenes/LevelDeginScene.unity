@@ -45689,7 +45689,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2875678888250976174, guid: ade7abe7515842e4f8b9771c44bbcf13, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 2875678888250976174, guid: ade7abe7515842e4f8b9771c44bbcf13, type: 3}
       propertyPath: m_TagString
@@ -53619,7 +53619,7 @@ GameObject:
   - component: {fileID: 3732785553212269659}
   - component: {fileID: 2505143819041934119}
   - component: {fileID: 5596962327405713164}
-  m_Layer: 8
+  m_Layer: 7
   m_Name: 03_low
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -53939,7 +53939,7 @@ GameObject:
   - component: {fileID: 3654957863910573581}
   - component: {fileID: 3654957863911572685}
   - component: {fileID: 3654957863907389965}
-  m_Layer: 8
+  m_Layer: 7
   m_Name: AmmoBox
   m_TagString: Ammo
   m_Icon: {fileID: 0}
@@ -54411,7 +54411,7 @@ GameObject:
   - component: {fileID: 4328136092482842562}
   - component: {fileID: 4328136092482842563}
   - component: {fileID: 4328136092482842564}
-  m_Layer: 8
+  m_Layer: 7
   m_Name: Door
   m_TagString: Door
   m_Icon: {fileID: 0}
@@ -55000,7 +55000,7 @@ GameObject:
   - component: {fileID: 6230247454784825817}
   - component: {fileID: 6230247454783728409}
   - component: {fileID: 6230247454787919321}
-  m_Layer: 8
+  m_Layer: 7
   m_Name: FirstAid
   m_TagString: HP
   m_Icon: {fileID: 0}
@@ -55365,7 +55365,7 @@ GameObject:
   - component: {fileID: 1341689014328779197}
   - component: {fileID: 3297385866616541685}
   - component: {fileID: 7592179316954218605}
-  m_Layer: 8
+  m_Layer: 7
   m_Name: 01_low
   m_TagString: Untagged
   m_Icon: {fileID: 0}

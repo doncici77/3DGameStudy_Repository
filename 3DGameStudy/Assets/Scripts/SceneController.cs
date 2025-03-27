@@ -35,12 +35,13 @@ public class SceneController : MonoBehaviour
 
     private void Start()
     {
-        SoundManager.Instance.PlayBGM("MenuBGMSound", 1.0f);
+        SoundManager.Instance.SetBGMVolume(0.3f);
+        SoundManager.Instance.PlayBGM("MenuBGMSound", 1f);
     }
 
     public void LoadScene(string sceneName)
     {
-        SoundManager.Instance.SetSFXVolume(1f);
+        SoundManager.Instance.SetSFXVolume(0.5f);
         SoundManager.Instance.PlaySFX("MenuButtonClick", transform.position, false);
 
         Debug.Log("SceneName : " + sceneName);
@@ -52,11 +53,13 @@ public class SceneController : MonoBehaviour
     {
         if (sceneName == "LevelDeginScene")
         {
-            SoundManager.Instance.PlayBGM("InGameBGMSound", 1.0f);
+            SoundManager.Instance.SetBGMVolume(0.5f);
+            SoundManager.Instance.PlayBGM("InGameBGMSound", 1f);
             StartCoroutine(DelayLoadScene(sceneName));
         }
         else if (sceneName == "MenuScene")
         {
+            SoundManager.Instance.SetBGMVolume(0.5f);
             SoundManager.Instance.PlayBGM("MenuBGMSound", 1.0f);
             StartCoroutine(DelayLoadScene(sceneName));
         }
@@ -72,7 +75,7 @@ public class SceneController : MonoBehaviour
 
     public void ExitScene()
     {
-        SoundManager.Instance.SetSFXVolume(1f);
+        SoundManager.Instance.SetSFXVolume(0.5f);
         SoundManager.Instance.PlaySFX("MenuButtonClick", transform.position, false);
         Application.Quit();
     }

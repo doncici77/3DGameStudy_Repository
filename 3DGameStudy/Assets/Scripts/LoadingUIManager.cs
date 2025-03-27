@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections;
+using UnityEngine.InputSystem;
 
 public class LoadingUIManager : MonoBehaviour
 {
@@ -33,6 +34,17 @@ public class LoadingUIManager : MonoBehaviour
                 nextSceneOp.allowSceneActivation = true;
             }
             yield return null;
+        }
+
+        if(sceneName == "LevelDeginScene")
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+        else if(sceneName == "MenuScene")
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
         }
 
         SceneManager.UnloadSceneAsync("LoadingScene"); // ·Îµù ¾À Á¦°Å
