@@ -1058,6 +1058,7 @@ public class PlayerManager : MonoBehaviour
         animator.SetTrigger("Dead");
 
         yield return new WaitForSeconds(4.0f);
+        Time.timeScale = 0;
         ShowDeathScreen();
     }
 
