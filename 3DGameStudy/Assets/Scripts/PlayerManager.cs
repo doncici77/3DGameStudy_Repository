@@ -510,6 +510,8 @@ public class PlayerManager : MonoBehaviour
             {
                 fadeImage.gameObject.SetActive(true);
                 clearText.gameObject.SetActive(true);
+                hit.collider.enabled = false;
+
                 StartCoroutine(ClearSequence());
             }
         }
