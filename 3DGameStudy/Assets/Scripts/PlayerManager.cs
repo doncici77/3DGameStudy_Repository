@@ -876,9 +876,6 @@ public class PlayerManager : MonoBehaviour
                         isFire = true;
                         StartCoroutine(DelayFire());
 
-                        //ApplyRecoil();
-                        //StartCameraShake();
-
                         Ray ray = new Ray(mainCamera.transform.position, mainCamera.transform.forward);
                         RaycastHit[] hits = Physics.RaycastAll(ray, weaponMaxDistance, targetLayerMask);
 
@@ -1078,22 +1075,6 @@ public class PlayerManager : MonoBehaviour
         runSoundCoroutine = null;
     }
 
-    /*// 걷는 사운드 예시
-    public void FootStepSoundOn()
-    {
-        if (Physics.Raycast(transform.position, transform.forward, out hit, 10.0f, itemLayer))
-        {
-            if (hit.ColliderHit.tag == "Wood")
-            {
-                audioSource.PlayOneShot(audioClipFire); //발소리재생
-            }
-            else if (hit.ColliderHit.tag == "Wood")
-            {
-                audioSource.PlayOneShot(audioClipFire); //발소리재생
-            }
-        }
-    }*/
-
     private void OnTriggerEnter(Collider other)
     {
         if (!isDead)
@@ -1217,15 +1198,4 @@ public class PlayerManager : MonoBehaviour
         // 씬 다시 로드 (선택)
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
-
-    /// <summary>
-    /// 씬이 로드 될때 호출되는 함수
-    /// </summary>
-    /// <param name="scene"></param>
-    /// <param name="mode"></param>
-    //void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    //{
-    //    Debug.Log("Loaded Scene : " + scene.name);
-    //    //플레이어, Ai, Item, Weapon
-    //}
 }

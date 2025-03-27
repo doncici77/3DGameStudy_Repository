@@ -38,6 +38,9 @@ public class SceneController : MonoBehaviour
         Screen.SetResolution(1080, 1920, true);
         Screen.SetResolution(Screen.width, (Screen.width * 16) / 9, true);
 
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
         SoundManager.Instance.SetBGMVolume(0.3f);
         SoundManager.Instance.PlayBGM("MenuBGMSound", 1f);
     }
