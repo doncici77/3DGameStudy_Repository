@@ -45,7 +45,7 @@ public class PlayerManager : MonoBehaviour
     private float pitch = 0.0f; // 위아래 회전 값
     private float yaw = 0.0f; // 좌우 회전 값
     private bool isFirstPerson = false; // 1인칭 모드 여부
-    private bool isRotaterAroundPlayer = true; // 카메라가 플레이어 주위를 회전하는지 여부
+    private bool isRotaterAroundPlayer = false; // 카메라가 플레이어 주위를 회전하는지 여부
 
     // 중력 관련 변수
     public float gravity = -9.81f;
@@ -481,35 +481,28 @@ public class PlayerManager : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.R))
         {
-            if(savebulletCount - (30 - firebulletCount) > 30)
+            if (firebulletCount < 30) // 탄창이 가득 차 있지 않을 때만 리로드
             {
-                animator.SetTrigger("Reload");
-                SoundManager.Instance.SetSFXVolume(1);
-                SoundManager.Instance.PlaySFX("ReloadSound", transform.position, false);
-
-                savebulletCount = savebulletCount - (30 - firebulletCount);
-                firebulletCount = 30;
-                bulletText.text = $"{firebulletCount}/{savebulletCount}";
-            }
-            else
-            {
-                if(savebulletCount > 0)
+                if (savebulletCount > 0) // 남은 총알이 있을 경우에만 리로드 진행
                 {
                     animator.SetTrigger("Reload");
                     SoundManager.Instance.SetSFXVolume(1);
                     SoundManager.Instance.PlaySFX("ReloadSound", transform.position, false);
 
-                    savebulletCount = 0;
-                    firebulletCount = firebulletCount + savebulletCount;
+                    // 리로드할 탄 수 계산 (최대 30발까지)
+                    int neededBullets = 30 - firebulletCount; // 필요한 탄약 개수
+                    int bulletsToReload = Mathf.Min(neededBullets, savebulletCount); // 실제 리로드할 탄약
+
+                    firebulletCount += bulletsToReload;
+                    savebulletCount -= bulletsToReload;
+
                     bulletText.text = $"{firebulletCount}/{savebulletCount}";
                 }
                 else
                 {
+                    // 남은 탄약이 없을 때 리로드 불가 사운드
                     SoundManager.Instance.SetSFXVolume(1f);
                     SoundManager.Instance.PlaySFX("StopSound", transform.position, true);
-
-                    savebulletCount = 0;
-                    bulletText.text = $"{firebulletCount}/{savebulletCount}";
                 }
             }
         }
@@ -914,11 +907,6 @@ public class PlayerManager : MonoBehaviour
                         {
                             Debug.DrawLine(ray.origin, ray.origin + ray.direction * weaponMaxDistance, Color.green, 2.0f);
                         }
-                    }
-                    else
-                    {
-                        SoundManager.Instance.SetSFXVolume(1f);
-                        SoundManager.Instance.PlaySFX("StopSound", transform.position, true);
                     }
                 }
             }
