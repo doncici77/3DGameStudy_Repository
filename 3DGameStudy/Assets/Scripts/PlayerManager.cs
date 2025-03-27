@@ -342,6 +342,15 @@ public class PlayerManager : MonoBehaviour
         Time.timeScale = 0; // 게임시간 정지
     }
 
+    public void Restart(string restartSceneName)
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        SoundManager.Instance.PlaySFX("MenuButtonClick", transform.position, false);
+        PauseObj.SetActive(false);
+        Time.timeScale = 1.0f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
     public void Exit()
     {
         SoundManager.Instance.SetSFXVolume(1);
