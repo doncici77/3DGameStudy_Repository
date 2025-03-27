@@ -17,7 +17,7 @@ public class ClearSceneManager : MonoBehaviour
     {
         if(Input.GetKeyUp(KeyCode.E))
         {
-            SceneLoader.Instance.StartLoading("MenuScene");
+            Application.Quit();
         }
     }
 }
