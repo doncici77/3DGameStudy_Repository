@@ -1,14 +1,13 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameSettingUIManager : MonoBehaviour
+public class GameSettingUIManager1 : MonoBehaviour
 {
     public GameObject SettingsObj;
 
     public Text resolutionText;
     public Text graphicsQualityText;
     public Text fullScreenText;
-    public Text sensitivityText;
 
     private int resolutionIndex = 0;
     private int qualityIndex = 0;
@@ -16,28 +15,6 @@ public class GameSettingUIManager : MonoBehaviour
 
     private string[] resolutions = { "1280x720", "1920x1080", "2560x1440", "3840x2160" };
     private string[] qualityOptions = { "Low", "Normal", "High" };
-
-    public Slider sensitivitySlider; // 감도 조절 슬라이더
-
-    void Start()
-    {
-        // 슬라이더 설정
-        if (sensitivitySlider != null)
-        {
-            sensitivitySlider.value = PlayerManager.Instance.mouseSensitivity;
-            sensitivitySlider.onValueChanged.AddListener(UpdateSensitivity);
-        }
-    }
-
-    void Update()
-    {
-        sensitivityText.text = PlayerManager.Instance.mouseSensitivity.ToString();
-    }
-
-    public void UpdateSensitivity(float sliderValue)
-    {
-        PlayerManager.Instance.mouseSensitivity = Mathf.Lerp(0, 300, sliderValue);
-    }
 
     public void OnApplySettingsClick()
     {
@@ -60,7 +37,6 @@ public class GameSettingUIManager : MonoBehaviour
         PlayerPrefs.SetInt("ResolutionIndex", resolutionIndex);
         PlayerPrefs.SetInt("GraphicsQualityIndex", qualityIndex);
         PlayerPrefs.SetInt("FullScreen", isFullScreen ? 1 : 0);
-        PlayerPrefs.SetFloat("MouseSensitivitySlider", sensitivitySlider.value);
         PlayerPrefs.Save();
     }
 
