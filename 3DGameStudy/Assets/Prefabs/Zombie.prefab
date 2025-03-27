@@ -2760,7 +2760,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   moveSpeed: 3
-  trackingRange: 50
+  trackingRange: 100
   idleTime: 2
   jumpHeight: 2
   jumpDuration: 1

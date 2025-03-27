@@ -237,7 +237,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 210705104}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9670b74261eca1143906112d26679e07, type: 3}
   m_Name: 
@@ -577,7 +577,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 210705106}
         m_TargetAssemblyTypeName: SceneController, Assembly-CSharp
-        m_MethodName: LoadScene
+        m_MethodName: OnSceneLoaded
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

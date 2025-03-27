@@ -239,6 +239,7 @@ public class PlayerManager : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.B))
         {
+            SoundManager.Instance.SetSFXVolume(1);
             SoundManager.Instance.PlaySFX("FlashLightOnSound", transform.position, false);
             rifleAutomaticMod = !rifleAutomaticMod;
             Debug.Log("연사모드 : " + rifleAutomaticMod);
@@ -309,6 +310,7 @@ public class PlayerManager : MonoBehaviour
     public void ReGame()
     {
         Cursor.lockState = CursorLockMode.Locked;
+        SoundManager.Instance.SetSFXVolume(1);
         SoundManager.Instance.PlaySFX("MenuButtonClick", transform.position, false);
         PauseObj.SetActive(false);
         Time.timeScale = 1.0f; // 게임 시간 재게
@@ -321,17 +323,9 @@ public class PlayerManager : MonoBehaviour
         Time.timeScale = 0; // 게임시간 정지
     }
 
-    public void Restart(string restartSceneName)
-    {
-        Cursor.lockState = CursorLockMode.Locked;
-        SoundManager.Instance.PlaySFX("MenuButtonClick" , transform.position, false);
-        PauseObj.SetActive(false);
-        Time.timeScale = 1.0f;
-        SceneController.Instance.LoadScene(restartSceneName);
-    }
-
     public void Exit()
     {
+        SoundManager.Instance.SetSFXVolume(1);
         SoundManager.Instance.PlaySFX("MenuButtonClick", transform.position, false);
         PauseObj.SetActive(false);
         Time.timeScale = 1.0f;
@@ -390,6 +384,7 @@ public class PlayerManager : MonoBehaviour
         foreach (RaycastHit hit in hits)
         {
             Debug.Log("Item : " + hit.collider.tag);
+            SoundManager.Instance.SetSFXVolume(1);
             SoundManager.Instance.PlaySFX("PickUpSound", transform.position, false);
 
             if (hit.collider.tag == "Rifle")
@@ -456,6 +451,7 @@ public class PlayerManager : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.R))
         {
             animator.SetTrigger("Reload");
+            SoundManager.Instance.SetSFXVolume(1);
             SoundManager.Instance.PlaySFX("ReloadSound", transform.position, false);
 
             savebulletCount = savebulletCount - (30 - firebulletCount);
@@ -466,6 +462,7 @@ public class PlayerManager : MonoBehaviour
 
     void ActionFlashLight()
     {
+        SoundManager.Instance.SetSFXVolume(1);
         SoundManager.Instance.PlaySFX("FlashLightOnSound", transform.position, false);
         isFlashLightOn = !isFlashLightOn;
         flashLightObj.SetActive(isFlashLightOn);
@@ -780,6 +777,7 @@ public class PlayerManager : MonoBehaviour
 
                                     ParticleSystem particle = Instantiate(damageParticleSystem, hits[i].point, Quaternion.identity);
                                     particle.Play();
+                                    SoundManager.Instance.SetSFXVolume(1);
                                     SoundManager.Instance.PlaySFX("ZombieTakeDamageSound", hits[i].collider.transform.position, true);
                                 }
                             }
@@ -793,6 +791,7 @@ public class PlayerManager : MonoBehaviour
                                 //particle.Play();
 
                                 ParticleManager.Instance.ParticlePlay(ParticleType.DamageExplosion, hits[0].transform, hits[0].transform.localScale);
+                                SoundManager.Instance.SetSFXVolume(1);
                                 SoundManager.Instance.PlaySFX("ZombieTakeDamageSound", hits[0].collider.transform.position, true);
                             }
                         }
@@ -839,6 +838,7 @@ public class PlayerManager : MonoBehaviour
 
                                     ParticleSystem particle = Instantiate(damageParticleSystem, hits[i].point, Quaternion.identity);
                                     particle.Play();
+                                    SoundManager.Instance.SetSFXVolume(1f);
                                     SoundManager.Instance.PlaySFX("ZombieTakeDamageSound", hits[i].collider.transform.position, true);
                                 }
                             }
@@ -852,6 +852,7 @@ public class PlayerManager : MonoBehaviour
                                 //particle.Play();
 
                                 ParticleManager.Instance.ParticlePlay(ParticleType.DamageExplosion, hits[0].transform, hits[0].transform.localScale);
+                                SoundManager.Instance.SetSFXVolume(1f);
                                 SoundManager.Instance.PlaySFX("ZombieTakeDamageSound", hits[0].collider.transform.position, true);
                             }
                         }
@@ -900,11 +901,13 @@ public class PlayerManager : MonoBehaviour
 
     public void WeaponChangeSoundOn()
     {
+        SoundManager.Instance.SetSFXVolume(1);
         SoundManager.Instance.PlaySFX("WeaponChangeSound", transform.position, false);
     }
 
     public void FireSoundOn()   
     {
+        SoundManager.Instance.SetSFXVolume(0.5f);
         SoundManager.Instance.PlaySFX("FireSound", transform.position, false);
         //rifleEffect.Play();
 
@@ -983,6 +986,7 @@ public class PlayerManager : MonoBehaviour
             {
                 Debug.Log("PlayerDamage" + other.gameObject.tag);
                 animator.SetTrigger("Damage");
+                SoundManager.Instance.SetSFXVolume(1);
                 SoundManager.Instance.PlaySFX("PlayerTakeDamageSound", transform.position, false);
                 playerHp -= 30;
 

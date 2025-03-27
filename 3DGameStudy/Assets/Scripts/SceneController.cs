@@ -51,10 +51,12 @@ public class SceneController : MonoBehaviour
         if (sceneName == "LevelDeginScene")
         {
             SoundManager.Instance.PlayBGM("InGameBGMSound", 1.0f);
+            StartCoroutine(DelayLoadScene(sceneName));
         }
         else if (sceneName == "MenuScene")
         {
             SoundManager.Instance.PlayBGM("MenuBGMSound", 1.0f);
+            StartCoroutine(DelayLoadScene(sceneName));
         }
     }
 
