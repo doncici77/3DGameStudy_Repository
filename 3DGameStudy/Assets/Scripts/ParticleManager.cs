@@ -54,11 +54,19 @@ public class ParticleManager : MonoBehaviour
             for(int i = 0; i < poolSize; i++)
             {
                 GameObject obj = Instantiate(particleSystemDic[type]);
+                obj.transform.SetParent(this.transform); // 풀링된 오브젝트를 ParticleManager의 자식으로 설정
                 obj.gameObject.SetActive(false);
                 pool.Enqueue(obj);
             }
 
-            particlePools.Add(type, pool);
+            if (!particlePools.ContainsKey(type))
+            {
+                particlePools[type] = pool; // Dictionary에 추가
+            }
+            else
+            {
+                Debug.LogWarning($"Particle pool already contains type: {type}");
+            }
         }
     }
 
@@ -70,8 +78,10 @@ public class ParticleManager : MonoBehaviour
 
             if(particleObj != null)
             {
-                particleObj.transform.SetParent(position);  // 부모(포지션) 설정
-                particleObj.transform.localPosition = Vector3.zero;  // 부모 기준 위치 초기화
+                particleObj.transform.SetParent(position); // 부모 설정
+                particleObj.transform.localPosition = Vector3.zero; // 부모 기준 위치 초기화
+                particleObj.transform.localScale = scale; // 크기 설정
+
                 ParticleSystem particleSystem = particleObj.GetComponentInChildren<ParticleSystem>();
 
                 if(particleSystem.isPlaying)
@@ -79,7 +89,6 @@ public class ParticleManager : MonoBehaviour
                     particleSystem.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
                 }
 
-                particleObj.transform.localScale = scale;
                 particleObj.SetActive(true);
                 particleSystem.Play();
                 StartCoroutine(particleEnd(type, particleObj, particleSystem));
@@ -96,6 +105,10 @@ public class ParticleManager : MonoBehaviour
 
         particleSystem.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
         particleObj.SetActive(false);
+
+        // 다시 풀에 넣기 전에 부모를 ParticleManager로 변경 (안전하게 관리하기 위함)
+        particleObj.transform.SetParent(this.transform);
+
         particlePools[type].Enqueue(particleObj);
     }
 }

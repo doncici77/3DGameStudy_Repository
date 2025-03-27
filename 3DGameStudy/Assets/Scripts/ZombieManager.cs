@@ -27,7 +27,7 @@ public class ZombieManager : MonoBehaviour
     public float trackingRange = 3.0f; // 추적 범위 설정
     private bool isAttack = false; // 공격 상태
     private float evadeRange = 5.0f; // 도망 상태 회피 거리
-    private float zombieHp = 3.0f; // 좀비 체력
+    private float zombieHp = 5.0f; // 좀비 체력
     private float distanceTotarget; // target과의 거리 계산 값
     private bool isWaiting = false; // 상태 전환 후 대기상태 여부
     public float idleTime = 2.0f; // 각 상태 전환 후 대기시간

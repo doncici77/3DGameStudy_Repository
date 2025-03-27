@@ -3,6 +3,7 @@ using System.Collections;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI; // NameSpace : 소속
 
 public enum WeaponMode
@@ -129,6 +130,11 @@ public class PlayerManager : MonoBehaviour
 
     public int killCount = 0;
 
+    public Text rifleModText;
+
+    public Image fadeImage;  // 검은 화면
+    public Text deathText; // "YOU DIED" 텍스트
+
     private void Awake()
     {
         if(Instance == null)
@@ -161,6 +167,10 @@ public class PlayerManager : MonoBehaviour
         bulletText.gameObject.SetActive(false);
         flashLightObj.SetActive(false);
         PauseObj.SetActive(false);
+        rifleModText.gameObject.SetActive(false);
+
+        fadeImage.color = new Color(0, 0, 0, 0); // 시작은 투명
+        deathText.color = new Color(1, 0, 0, 0); // 텍스트도 투명
 
         SoundManager.Instance.PlayBGM("InGameBGMSound");
         SoundManager.Instance.SetSFXVolume(0.7f);
@@ -243,6 +253,15 @@ public class PlayerManager : MonoBehaviour
             SoundManager.Instance.PlaySFX("FlashLightOnSound", transform.position, false);
             rifleAutomaticMod = !rifleAutomaticMod;
             Debug.Log("연사모드 : " + rifleAutomaticMod);
+
+            if(rifleAutomaticMod)
+            {
+                rifleModText.text = "자동";
+            }
+            else
+            {
+                rifleModText.text = "단발";
+            }
         }
     }
 
@@ -724,6 +743,7 @@ public class PlayerManager : MonoBehaviour
             RifleAKobj.SetActive(true);
             isCanAim = true;
             bulletText.gameObject.SetActive(true);
+            rifleModText.gameObject.SetActive(true);
         }
     }
 
@@ -1012,8 +1032,7 @@ public class PlayerManager : MonoBehaviour
         animator.SetTrigger("Dead");
 
         yield return new WaitForSeconds(4.0f);
-        gameObject.SetActive(false);
-        Pause();
+        ShowDeathScreen();
     }
 
     private IEnumerator DelayTakeDamage()
@@ -1058,6 +1077,45 @@ public class PlayerManager : MonoBehaviour
         Debug.DrawLine(corners[3], corners[7], Color.green, 3.0f);
         Debug.DrawRay(origin, direction * castDistance, Color.green);
 
+    }
+
+    public void ShowDeathScreen()
+    {
+        StartCoroutine(DeathSequence());
+    }
+
+    IEnumerator DeathSequence()
+    {
+        float fadeDuration = 2.0f; // 페이드 효과 시간
+        float elapsed = 0f;
+
+        // 화면이 검게 변함
+        while (elapsed < fadeDuration)
+        {
+            float alpha = elapsed / fadeDuration;
+            fadeImage.color = new Color(0, 0, 0, alpha);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        fadeImage.color = new Color(0, 0, 0, 1); // 완전 검게
+
+        yield return new WaitForSeconds(0.5f);
+
+        // "YOU DIED" 텍스트 서서히 나타남
+        elapsed = 0f;
+        while (elapsed < fadeDuration)
+        {
+            float alpha = elapsed / fadeDuration;
+            deathText.color = new Color(1, 0, 0, alpha);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        deathText.color = new Color(1, 0, 0, 1); // 완전 빨간색
+
+        yield return new WaitForSeconds(2f); // 2초 대기
+
+        // 씬 다시 로드 (선택)
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     /// <summary>
