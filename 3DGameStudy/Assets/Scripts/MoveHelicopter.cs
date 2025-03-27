@@ -12,6 +12,6 @@ public class MoveHelicopter : MonoBehaviour
 
     void Update()
     {
-        transform.position = Vector3.MoveTowards(transform.position, new Vector3(transform.position.x, 0.5f, transform.position.z), 0.2f * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(transform.position, new Vector3(transform.position.x, 0.5f, transform.position.z), 2f * Time.deltaTime);
     }
 }

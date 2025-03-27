@@ -134,6 +134,7 @@ public class PlayerManager : MonoBehaviour
 
     public Image fadeImage;  // 검은 화면
     public Text deathText; // "YOU DIED" 텍스트
+    public Text clearText; 
 
     private void Awake()
     {
@@ -171,6 +172,7 @@ public class PlayerManager : MonoBehaviour
 
         fadeImage.color = new Color(0, 0, 0, 0); // 시작은 투명
         deathText.color = new Color(1, 0, 0, 0); // 텍스트도 투명
+        clearText.color = new Color(1, 1, 0, 0); 
 
         SoundManager.Instance.PlayBGM("InGameBGMSound");
         SoundManager.Instance.SetSFXVolume(0.7f);
@@ -474,7 +476,44 @@ public class PlayerManager : MonoBehaviour
                     return;
                 }
             }
+            else if(hit.collider.name == "Helicopter")
+            {
+                StartCoroutine(ClearSequence());
+            }
         }
+    }
+
+    IEnumerator ClearSequence()
+    {
+        float fadeDuration = 2.0f; // 페이드 효과 시간
+        float elapsed = 0f;
+
+        // 화면이 검게 변함
+        while (elapsed < fadeDuration)
+        {
+            float alpha = elapsed / fadeDuration;
+            fadeImage.color = new Color(0, 0, 0, alpha);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        fadeImage.color = new Color(0, 0, 0, 1); // 완전 검게
+
+        yield return new WaitForSeconds(0.5f);
+
+        // "YOU DIED" 텍스트 서서히 나타남
+        elapsed = 0f;
+        while (elapsed < fadeDuration)
+        {
+            float alpha = elapsed / fadeDuration;
+            clearText.color = new Color(1, 1, 0, alpha);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        clearText.color = new Color(1, 1, 0, 1);
+
+        yield return new WaitForSeconds(2f); // 2초 대기
+
+        SceneLoader.Instance.StartLoading("ClearScene");
     }
 
     void Reload()
