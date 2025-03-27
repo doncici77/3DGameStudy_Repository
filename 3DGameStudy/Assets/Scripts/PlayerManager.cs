@@ -481,13 +481,37 @@ public class PlayerManager : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.R))
         {
-            animator.SetTrigger("Reload");
-            SoundManager.Instance.SetSFXVolume(1);
-            SoundManager.Instance.PlaySFX("ReloadSound", transform.position, false);
+            if(savebulletCount - (30 - firebulletCount) > 30)
+            {
+                animator.SetTrigger("Reload");
+                SoundManager.Instance.SetSFXVolume(1);
+                SoundManager.Instance.PlaySFX("ReloadSound", transform.position, false);
 
-            savebulletCount = savebulletCount - (30 - firebulletCount);
-            firebulletCount = 30;
-            bulletText.text = $"{firebulletCount}/{savebulletCount}";
+                savebulletCount = savebulletCount - (30 - firebulletCount);
+                firebulletCount = 30;
+                bulletText.text = $"{firebulletCount}/{savebulletCount}";
+            }
+            else
+            {
+                if(savebulletCount > 0)
+                {
+                    animator.SetTrigger("Reload");
+                    SoundManager.Instance.SetSFXVolume(1);
+                    SoundManager.Instance.PlaySFX("ReloadSound", transform.position, false);
+
+                    savebulletCount = 0;
+                    firebulletCount = firebulletCount + savebulletCount;
+                    bulletText.text = $"{firebulletCount}/{savebulletCount}";
+                }
+                else
+                {
+                    SoundManager.Instance.SetSFXVolume(1f);
+                    SoundManager.Instance.PlaySFX("StopSound", transform.position, true);
+
+                    savebulletCount = 0;
+                    bulletText.text = $"{firebulletCount}/{savebulletCount}";
+                }
+            }
         }
     }
 
@@ -890,6 +914,11 @@ public class PlayerManager : MonoBehaviour
                         {
                             Debug.DrawLine(ray.origin, ray.origin + ray.direction * weaponMaxDistance, Color.green, 2.0f);
                         }
+                    }
+                    else
+                    {
+                        SoundManager.Instance.SetSFXVolume(1f);
+                        SoundManager.Instance.PlaySFX("StopSound", transform.position, true);
                     }
                 }
             }

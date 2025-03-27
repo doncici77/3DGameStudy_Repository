@@ -1207,6 +1207,8 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: d0da9aa78c030654a8ed289f01d16046, type: 3}
   - name: HpSound
     clip: {fileID: 8300000, guid: 809ef49da9180b74088019c196964438, type: 3}
+  - name: StopSound
+    clip: {fileID: 8300000, guid: e03bdf620cb731f4185fff166107d76d, type: 3}
   walkSoundClip: {fileID: 8300000, guid: 7ca5a9710db4327439c9f8cb8204615e, type: 3}
 --- !u!82 &877883158
 AudioSource:
