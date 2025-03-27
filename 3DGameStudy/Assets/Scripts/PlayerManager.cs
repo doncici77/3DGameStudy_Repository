@@ -1126,7 +1126,6 @@ public class PlayerManager : MonoBehaviour
         animator.SetTrigger("Dead");
 
         yield return new WaitForSeconds(4.0f);
-        Time.timeScale = 0;
         ShowDeathScreen();
     }
 
@@ -1209,7 +1208,7 @@ public class PlayerManager : MonoBehaviour
             yield return null;
         }
         deathText.color = new Color(1, 0, 0, 1); // 완전 빨간색
-
+        Time.timeScale = 0;
         yield return new WaitForSeconds(2f); // 2초 대기
 
         // 씬 다시 로드 (선택)
