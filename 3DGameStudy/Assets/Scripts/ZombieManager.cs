@@ -323,6 +323,7 @@ public class ZombieManager : MonoBehaviour
         animator.SetTrigger("isDie");
         SoundManager.Instance.PlaySFX("ZombieDieSound", transform.position, true);
         yield return new WaitForSeconds(3.0f);
+        PlayerManager.Instance.killCount++;
         gameObject.SetActive(false);
     }
 

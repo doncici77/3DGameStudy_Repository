@@ -127,6 +127,8 @@ public class PlayerManager : MonoBehaviour
 
     private bool rifleAutomaticMod = false;
 
+    public int killCount = 0;
+
     private void Awake()
     {
         if(Instance == null)
