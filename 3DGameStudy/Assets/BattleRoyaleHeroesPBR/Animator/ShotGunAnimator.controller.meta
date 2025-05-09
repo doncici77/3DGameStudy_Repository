@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 0d57f98eeee801d4c9f4ba0744339ce7
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 189511
+  packageName: Battle Royale Hero PBR
+  packageVersion: 1.1
+  assetPath: Assets/BattleRoyaleHeroesPBR/Animator/ShotGunAnimator.controller
+  uploadId: 458579

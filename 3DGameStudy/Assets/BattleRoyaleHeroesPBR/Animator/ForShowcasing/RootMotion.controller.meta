@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: b9e75b8a327d5f54b98153edf2f3405a
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 189511
+  packageName: Battle Royale Hero PBR
+  packageVersion: 1.1
+  assetPath: Assets/BattleRoyaleHeroesPBR/Animator/ForShowcasing/RootMotion.controller
+  uploadId: 458579

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 94e270b98d64ede42b6a237cb646635e
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 189511
+  packageName: Battle Royale Hero PBR
+  packageVersion: 1.1
+  assetPath: Assets/BattleRoyaleHeroesPBR/Animator/WeaponAnimator/SawGun.controller
+  uploadId: 458579

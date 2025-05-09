@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 00eb1ba92a205e143944fa63388db963
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 189511
+  packageName: Battle Royale Hero PBR
+  packageVersion: 1.1
+  assetPath: Assets/BattleRoyaleHeroesPBR/Material/PBRDefault/HeadsPBRDefault.mat
+  uploadId: 458579

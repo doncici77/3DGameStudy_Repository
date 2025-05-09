@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: ea488cf719c57234e84ce4719e577001
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 31900000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 189511
+  packageName: Battle Royale Hero PBR
+  packageVersion: 1.1
+  assetPath: Assets/BattleRoyaleHeroesPBR/Animator/ForShowcasing/AvatarMask.mask
+  uploadId: 458579

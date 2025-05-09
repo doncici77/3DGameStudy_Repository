@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 966f0822117ed0e4db88edb119f7f899
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 189511
+  packageName: Battle Royale Hero PBR
+  packageVersion: 1.1
+  assetPath: Assets/BattleRoyaleHeroesPBR/SRP/HowToTestSRPs.txt
+  uploadId: 458579

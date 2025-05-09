@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 5cacba29a1abb9a4aa2b32001a835a1f
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 189511
+  packageName: Battle Royale Hero PBR
+  packageVersion: 1.1
+  assetPath: Assets/BattleRoyaleHeroesPBR/Prefab/Character/PBRDefault/BearDefault.prefab
+  uploadId: 458579

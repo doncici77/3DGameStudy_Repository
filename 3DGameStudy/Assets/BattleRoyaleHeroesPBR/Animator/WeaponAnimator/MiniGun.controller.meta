@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: ddddb9821fe87d74cb6013a1ede37731
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 189511
+  packageName: Battle Royale Hero PBR
+  packageVersion: 1.1
+  assetPath: Assets/BattleRoyaleHeroesPBR/Animator/WeaponAnimator/MiniGun.controller
+  uploadId: 458579

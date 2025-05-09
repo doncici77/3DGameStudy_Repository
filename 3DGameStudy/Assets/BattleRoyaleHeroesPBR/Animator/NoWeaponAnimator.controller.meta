@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: a76731393e6ac1245ac1095ab2f84c86
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 189511
+  packageName: Battle Royale Hero PBR
+  packageVersion: 1.1
+  assetPath: Assets/BattleRoyaleHeroesPBR/Animator/NoWeaponAnimator.controller
+  uploadId: 458579

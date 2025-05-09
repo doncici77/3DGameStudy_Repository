@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: b6b013fd03227ac49b62c223abdcfdf2
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 189511
+  packageName: Battle Royale Hero PBR
+  packageVersion: 1.1
+  assetPath: Assets/BattleRoyaleHeroesPBR/Animator/ForShowcasing/AnimLayer.controller
+  uploadId: 458579

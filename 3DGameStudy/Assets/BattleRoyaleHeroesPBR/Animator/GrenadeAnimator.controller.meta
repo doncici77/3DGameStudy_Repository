@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 929e8f9e7ac31b746a6d22e441959d8a
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 189511
+  packageName: Battle Royale Hero PBR
+  packageVersion: 1.1
+  assetPath: Assets/BattleRoyaleHeroesPBR/Animator/GrenadeAnimator.controller
+  uploadId: 458579

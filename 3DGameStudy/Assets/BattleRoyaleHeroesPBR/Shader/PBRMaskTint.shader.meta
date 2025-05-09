@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: ed9f374832d68ab4388663ce4218dbab
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 189511
+  packageName: Battle Royale Hero PBR
+  packageVersion: 1.1
+  assetPath: Assets/BattleRoyaleHeroesPBR/Shader/PBRMaskTint.shader
+  uploadId: 458579

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: f564c90c196317948aefd1a1e7fb192d
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 189511
+  packageName: Battle Royale Hero PBR
+  packageVersion: 1.1
+  assetPath: Assets/BattleRoyaleHeroesPBR/Animator/RailGunAnimator.controller
+  uploadId: 458579

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: afef9762a7835bf468cfca7d412392fc
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 189511
+  packageName: Battle Royale Hero PBR
+  packageVersion: 1.1
+  assetPath: Assets/BattleRoyaleHeroesPBR/Animator/IceGunAnimator.controller
+  uploadId: 458579

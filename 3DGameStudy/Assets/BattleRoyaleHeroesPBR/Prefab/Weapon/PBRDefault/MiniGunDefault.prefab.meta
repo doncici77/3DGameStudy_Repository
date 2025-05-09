@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 79cfad6d28604f54a97b32d45af9d2b2
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 189511
+  packageName: Battle Royale Hero PBR
+  packageVersion: 1.1
+  assetPath: Assets/BattleRoyaleHeroesPBR/Prefab/Weapon/PBRDefault/MiniGunDefault.prefab
+  uploadId: 458579

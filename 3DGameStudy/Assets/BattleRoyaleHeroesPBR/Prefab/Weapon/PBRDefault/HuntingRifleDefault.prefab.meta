@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: b09ec5d8c38278946a04894adb8f59e2
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 189511
+  packageName: Battle Royale Hero PBR
+  packageVersion: 1.1
+  assetPath: Assets/BattleRoyaleHeroesPBR/Prefab/Weapon/PBRDefault/HuntingRifleDefault.prefab
+  uploadId: 458579

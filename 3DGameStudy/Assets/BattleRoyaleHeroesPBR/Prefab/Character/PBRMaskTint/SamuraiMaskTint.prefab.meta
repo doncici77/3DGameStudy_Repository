@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: b8d6b1ead9d487749a17b4403f8e9c77
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 189511
+  packageName: Battle Royale Hero PBR
+  packageVersion: 1.1
+  assetPath: Assets/BattleRoyaleHeroesPBR/Prefab/Character/PBRMaskTint/SamuraiMaskTint.prefab
+  uploadId: 458579

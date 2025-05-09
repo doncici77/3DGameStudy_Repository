@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 754223ca98f6d3249a40eb103efdc674
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 189511
+  packageName: Battle Royale Hero PBR
+  packageVersion: 1.1
+  assetPath: Assets/BattleRoyaleHeroesPBR/Animator/AssaultRifleAnimator.controller
+  uploadId: 458579

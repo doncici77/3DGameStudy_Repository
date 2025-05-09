@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 77c66d64e7d1a8b458934029d50fcbf1
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 189511
+  packageName: Battle Royale Hero PBR
+  packageVersion: 1.1
+  assetPath: Assets/BattleRoyaleHeroesPBR/Prefab/Weapon/PBRDefault/FlameThrowerDefault.prefab
+  uploadId: 458579

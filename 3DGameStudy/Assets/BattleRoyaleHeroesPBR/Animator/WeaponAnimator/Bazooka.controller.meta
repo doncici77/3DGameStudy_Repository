@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: da8ad192cda2dd3419d7d1cff3ea6820
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 189511
+  packageName: Battle Royale Hero PBR
+  packageVersion: 1.1
+  assetPath: Assets/BattleRoyaleHeroesPBR/Animator/WeaponAnimator/Bazooka.controller
+  uploadId: 458579

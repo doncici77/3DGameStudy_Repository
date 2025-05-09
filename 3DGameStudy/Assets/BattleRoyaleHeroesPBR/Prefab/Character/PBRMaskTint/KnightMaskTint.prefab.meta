@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 9bbb6c9d804f9f54b8654e180eaffa02
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 189511
+  packageName: Battle Royale Hero PBR
+  packageVersion: 1.1
+  assetPath: Assets/BattleRoyaleHeroesPBR/Prefab/Character/PBRMaskTint/KnightMaskTint.prefab
+  uploadId: 458579

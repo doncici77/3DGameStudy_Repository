@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 16c35e6b4f70e134ebc0da459a5d293b
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 189511
+  packageName: Battle Royale Hero PBR
+  packageVersion: 1.1
+  assetPath: Assets/BattleRoyaleHeroesPBR/Prefab/Character/PBRMaskTint/BasicFemaleMaskTint.prefab
+  uploadId: 458579

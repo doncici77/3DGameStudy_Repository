@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: dc98d2b7cb418b7409bb23c9b2c9b036
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 189511
+  packageName: Battle Royale Hero PBR
+  packageVersion: 1.1
+  assetPath: Assets/BattleRoyaleHeroesPBR/Prefab/Weapon/PBRMaskTint/FlameThrowerMaskTint.prefab
+  uploadId: 458579

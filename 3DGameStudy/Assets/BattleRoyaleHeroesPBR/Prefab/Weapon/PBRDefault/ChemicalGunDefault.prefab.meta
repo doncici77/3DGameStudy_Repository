@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: ce5dc50b63174014f92200f39ed282d1
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 189511
+  packageName: Battle Royale Hero PBR
+  packageVersion: 1.1
+  assetPath: Assets/BattleRoyaleHeroesPBR/Prefab/Weapon/PBRDefault/ChemicalGunDefault.prefab
+  uploadId: 458579

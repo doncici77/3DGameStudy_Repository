@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 365d5f64ec7f303468f5a2e9791c0630
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 189511
+  packageName: Battle Royale Hero PBR
+  packageVersion: 1.1
+  assetPath: Assets/BattleRoyaleHeroesPBR/Prefab/Character/PBRMaskTint/BasicMaleMaskTint.prefab
+  uploadId: 458579

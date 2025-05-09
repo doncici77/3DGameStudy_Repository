@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: eed2826d10b367d4baa1d37358f64197
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 189511
+  packageName: Battle Royale Hero PBR
+  packageVersion: 1.1
+  assetPath: Assets/BattleRoyaleHeroesPBR/Prefab/Character/PBRDefault/VeteranDefault.prefab
+  uploadId: 458579
